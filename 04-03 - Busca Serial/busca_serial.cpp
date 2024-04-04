@@ -1,5 +1,6 @@
 #include <iostream>
 
+
 using namespace std;
 
 struct registro{
@@ -30,25 +31,32 @@ struct registro{
     }
 };
 
-int busca_serial(registro reg[], int tamanho){
+
+void busca_serial(registro reg[], int tamanho){
 
     int codigo;
 
     cout << "Digite o codigo buscado: ";
     cin >> codigo;
 
-    int i;
-    for (i = 0; i < tamanho; i++){
-        if (reg[i].codigo == codigo){
-            return i;
-        }
-        if (reg[i].codigo > codigo){
-            i = tamanho;
-        }
+    int i = 0;
+    for (; i < tamanho && codigo > reg[i].codigo; i++);
+    if (reg[i].codigo == codigo){
+        cout << "Cliente encontrado" << endl << endl;
+        reg[i].imprimir();
+    }else{
+        cout << "Cliente nao encontrado" << endl;
     }
-    return -1;
+
 }
 
+void menu(){
+    cout << "Menu" << endl;
+
+    cout << "/n 1 - Adicional na lista";
+    cout << "/n 1 - Buscar";
+
+}
 
 int main(){
 
@@ -59,13 +67,8 @@ int main(){
     for (i = 0; i<tamanho;i++){
         lista[i].leitura();
     }
+    busca_serial(lista, tamanho);
 
-    int busca = busca_serial(lista, tamanho);
-    if (busca || busca == 0 ){
-        lista[busca].imprimir();
-    }else {
-        cout << "Registro nao encontrado";
-    };
 
     return 0;
 }
