@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string.h>
-#include <iomanip>
+#include<iomanip>
 
 using namespace std;
 
@@ -49,7 +49,7 @@ void busca_binaria(registro li[], int tamanho){
         f = m - 1;
     }
     m = (i+f)/2;
-}
+    }
     if (codigo == li[m].cod){
         li[m].imprimir();
     }else {
