@@ -6,7 +6,6 @@ using namespace std;
 struct registro{
     int cod;
     string name;
-    string address;
 
     void read(){
         cout << "\nReading register";
@@ -15,13 +14,13 @@ struct registro{
         cout << "\nName: ";
         fflush(stdin);
         getline(cin, name);
-        cout << "\nAddress: ";
+        /*cout << "\nAddress: ";
         getline(cin, address);
-        fflush(stdin);
+        */fflush(stdin);
     }
     void show(){
-        cout << "\nShow register";
-        cout << "\nCod: " << cod << "\nName: " << name << "\nAddress: " << address;
+        cout << "\n-----------Show register-------------";
+        cout << "\nCod: " << cod << "\nName: " << name << endl; //<< "\nAddress: " << address;
     }
 };
 
@@ -36,7 +35,6 @@ void read_line(registro line[], int tamanho, int &contador){
 };
 
 void show_line(registro line[], int tamanho){
-    cout << tamanho;
     for(int i=0; i<tamanho;i++){
         line[i].show();
     }
@@ -65,6 +63,9 @@ void update_line(registro lineS[], int &contadorS, int lineT[], int &contadorT, 
         }
         lineA[i] = lineS[k];
         contadorA += 1;
+        if(lineT[j] < lineS[k].cod){
+            j++;
+        }
     }
 }
 
