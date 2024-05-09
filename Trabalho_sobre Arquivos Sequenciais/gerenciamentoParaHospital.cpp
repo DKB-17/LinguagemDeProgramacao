@@ -1,11 +1,41 @@
 #include <iostream>
+#include <string.h>
 
 using namespace std;
+
+
+string lerTelefone(){
+    string telefone;
+    fflush(stdin);
+    do{
+        getline(cin, telefone);
+    }while(strnlen(telefone) < 14)
+    fflush(stdin);
+    return telefone;
+}
+string lerEndereco(){
+    string endereco;
+    fflush(stdin);
+    do{
+        getline(cin, endereco);
+    }while(strnlen(endereco) < 4)
+    fflush(stdin);
+    return endereco;
+}
+string lerNome{
+    string nome;
+    fflush(stdin);
+    do{
+        getline(cin, nome);
+    }while(strnlen(nome) < 2)
+    fflush(stdin);
+    return nome;
+}
 
 struct cidade{
     int codigo;
     string nome;
-    char UF[2];
+    string UF;
 };
 
 void lerCidade(struct cidade city){
@@ -23,9 +53,10 @@ void lerCidade(struct cidade city){
      cout << "\nDigite o nome da cidade: ";
      fflush(stdin);
      getline(cin, city.nome);
-     fflush(stdin);
+
      cout << "\nDigite a UF da cidade:";
-     gets(2,city.UF);
+     getline(cin, city.UF);
+     fflush(stdin);
     }
 }
 
@@ -40,6 +71,16 @@ void mostrarListaCidade(struct cidade listaCity[], int tamanho){
     for(int i = 0;i<tamanho;i++){
         mostrarCidade(listaCity[i]);
     }
+}
+
+bool existeCidade(struct cidade city, struct cidade listaCity[], int tamanho){
+    /*VERIFICAR SE A CIDADE CITY(ENTRADA) EXISTE NA listaCity[](ENTRADA), E RETORNA TRUE OU FALSE*/
+    for(int i=0; i < tamanho; i++){
+        if(city.codigo == listaCity[i].codigo){
+            return true;
+        }
+    }
+    return false;
 }
 
 struct especialidade{
@@ -75,8 +116,24 @@ void mostrarListaEspecialidade(struct especialidade listaEsp[], int tamanho){
     /*FUNCAO PARA PESCORER EXIBINDO A LISTA DE ESPECIALIDADE*/
     cout << "\nCODIGO\t|\tDESCRICAO";
     for (int i = 0; i < tamanho; i++){
-        mostrarEspecialidade(listaEso[i]);
+        mostrarEspecialidade(listaEsp[i]);
     }
+}
+
+bool existeEspecialidade(int codigo, struct especialidade listaEsp[], int tamanho){
+    /*VERIFICAR SE A ESPECIALIDADE ESP(ENTRADA) EXISTE NA listaEsp[](ENTRADA), E RETORNA TRUE OU FALSE*/
+    if(tamanho != 0 && codigo != 0){
+    for(int i=0; i < tamanho; i++){
+        if(codigo == listaEsp[i].codigo){
+            return true;
+        }
+    }
+    return false;
+    }else if(codigo == 0){
+        return true;
+    }
+    cout << "/nLista de Especialidade Vazia";
+    return false;
 }
 struct medicos{
     int codigo;
@@ -86,6 +143,36 @@ struct medicos{
     string telefone;
     int codigoCidade;
 };
+
+void lerMedico(struct medicos med,struct especialidade listaEsp[], int tamanho){
+    /*
+    FUNCAO PARA LEITURA DE MEDICO;
+    VERIFICACAO COM 0 PARA SAIDA;
+    RETORNO DE DOS DADOS PARA O ATRIBUTO MEDICOS;
+    */
+    cout << "\nDigite o codigo do medico: (digite 0 para sair)";
+    int i;
+    cin >> i;
+    // VERIFICA i != 0 (0 sendo a saida)
+    if (i == 0){return;}else{
+     med.codigo = i;
+     cout << "\nDigite o nome do medico: ";
+     med.nome = lerNome();
+     do{
+        cout << "\nDigite o codigo do especialista: ";
+        cin >> i;
+     }while(existeEspecialidade(i, listaEsp[],tamanho));
+     cout << "\nDigite o endereco: ";
+     med.endereco = lerEndereco();
+     cout << "\nDigite o telefone: ";
+     med.telefone = lerTelefone();
+     do{
+        cout << "\nDigite o codigo do especialista: ";
+        cin >> i;
+     }while(existeEspecialidade(i, listaEsp[],tamanho));
+    }
+}
+
 
 struct pacientes{
     int CPF;
