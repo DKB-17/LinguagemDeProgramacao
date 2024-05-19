@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string.h>
 
 using namespace std;
 
@@ -20,7 +19,7 @@ struct cidade{
         fflush(stdin);
     }
 
-    void imprimirCidade(){
+    void imprimirCidade() const{
         cout << "\nCidade: " << codigo;
         cout << "\nNome: " << nome;
         cout << "\nUF: " << UF;
@@ -41,7 +40,7 @@ struct especialidade{
         fflush(stdin);
     }
 
-    void imprimirEspecialidade(){
+    void imprimirEspecialidade() const{
         cout << "\nEspecialidade: " << codigo;
         cout << "\nDescricao: " << descricao;
     }
@@ -62,13 +61,13 @@ struct CID{
         fflush(stdin);
     }
 
-    void imprimirCID(){
+    void imprimirCID() const{
         cout << "\nCID: " << codigo;
         cout << "\nDescricao: " << descricao;
     }
 };
 
-struct medicamentos{
+struct medicamento{
     int codigo;
     string nome;
     int quantEstoque;
@@ -114,7 +113,7 @@ struct medicamentos{
         }while(precoUnitario < 0);
     }
 
-    void imprimirMedicamento(){
+    void imprimirMedicamento() const{
         cout << "\nMedicamento: " << codigo;
         cout << "\nNome: \t" << nome;
         cout << "\nQuantidade no Estoque: \t" << quantEstoque;
@@ -125,7 +124,7 @@ struct medicamentos{
 };
 
 
-struct medicos{
+struct medico{
     int codigo;
     string nome;
     int codigoEspecialidade;
@@ -134,7 +133,7 @@ struct medicos{
     int codigoCidade;
 };
 
-struct pacientes{
+struct paciente{
     int CPF;
     string nome;
     string endereco;
@@ -201,7 +200,7 @@ int main(){
 
     int tamanho_medicamento = 10;
     int contador_medicamento = 3;
-    medicamentos listaMedicamento[tamanho_medicamento];
+    medicamento listaMedicamento[tamanho_medicamento];
 
     /*DADOS INJETADOS DE MEDICAMENTO*/
 
