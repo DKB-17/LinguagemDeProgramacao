@@ -167,67 +167,81 @@ struct medico {
     char telefone[14];
     int codigoCidade;
 
-    void lerMedico(struct especialidade listaEspecialidade[], int contador_especialidade, struct cidade listaCidade[], int contador_cidade){
-        if(contador_especialidade != 0 && contador_cidade != 0) {
-            bool validacao = false;
-            system("cls");
-            cout << "\nDigite o codigo do medico: ";
-            cin >> codigo;
-            cout << "\nDigite o nome do medico: ";
-            fflush(stdin);
-            getline(cin, nome);
-            fflush(stdin);
-            do {
-                imprimirListaEspecialidade(listaEspecialidade, contador_especialidade);
-                cout << "\nDigite o codigo de Especialidade: ";
-                cin >> codigoEspecialidade;
-                validacao = existeEspecialidade(codigoEspecialidade, listaEspecialidade, contador_especialidade);
-                if (!validacao) {
-                    cout << "\nCodigo de especialidade nao existe, Por favor digite outro valor";
-                }
-            } while (!validacao);
-            cout << "\nDigite o endereco: ";
-            fflush(stdin);
-            getline(cin, endereco);
-            fflush(stdin);
-            do {
-                cout << "\nDigite o telefone: ";
-                gets(telefone);
-                if(strlen(telefone) != 14){
-                    cout << "\nTelefone invalido, tente escriver ele nessa modelo (xx)xxxxx-xxxx";
-                }
-            }while(strlen(telefone) != 14);
-            do {
-                imprimirListaCidade(listaCidade,contador_cidade);
-                cout << "\nDigite o codigo da Cidade: ";
-                cin >> codigoCidade;
-                validacao = existeCidade(codigoCidade, listaCidade, contador_cidade);
-                if (!validacao) {
-                    cout << "\nCodigo de cidade nao existe, Por favor digite outro valor";
-                }
-            } while (!validacao);
-        }else{
-            if(contador_especialidade == 0){
-                cout << "\nLista de especialide Vazia, por fazer registre uma especialidade primeiro :C";
-            }else{
-                if(contador_cidade == 0){
-                    cout << "\nLista de cidade Vazia, por fazer registre uma cidade primeiro :C";
-                }
-            }
-        }
-    }
-    void imprimirMedico() const{
-        cout << "\nMedico: " << codigo;
-        cout << "\nNome: \t" << nome;
-        cout << "\nCodigo Especialidade: \t" << codigoEspecialidade;
-        cout << "\nEndereco: \t" << endereco;
-        cout << "\nTelefone: \t" << telefone;
-        cout << "\nCodigo Cidade: \t" << codigoCidade;
-    }
-
 };
 
+void imprimirMedico(struct medico listaMedico[],int contador_medico) const {
+    cout << "\nMedico: " << listaMedico[contador_medico].codigo;
+    cout << "\nNome: \t" << listaMedico[contador_medico].nome;
+    cout << "\nCodigo Especialidade: \t" << listaMedico[contador_medico].codigoEspecialidade;
+    cout << "\nEndereco: \t" << listaMedico[contador_medico].endereco;
+    cout << "\nTelefone: \t" << listaMedico[contador_medico].telefone;
+    cout << "\nCodigo Cidade: \t" << listaMedico[contador_medico].codigoCidade;
+}
 
+bool existeMedico(int codigo, struct medico listaMedico[], int contador_medico) {
+    for(int i= contador_medico - 1; i > -1; i--){
+        if (codigo == listaMedico[i].codigo){
+            return true;
+        }
+    }
+    return false;
+}
+
+
+void lerMedico(struct medico listaMedico[], int contador_medico, struct especialidade listaEspecialidade[], int contador_especialidade, struct cidade listaCidade[], int contador_cidade){
+    if(contador_especialidade != 0 && contador_cidade != 0) {
+        bool validacao;
+        int codigo;
+        system("cls");
+        do {
+            cout << "\nDigite o codigo do medico: ";
+            cin >> codigo;
+            validacao = existeMedico(codigo,listaMedico,contador_medico);
+            if(validacao){
+                cout << "\nCodigo de medico ja existe, Por favor digite outro codigo";
+            }
+        }while(validacao);
+        cout << "\nDigite o nome do medico: ";
+        fflush(stdin);
+        getline(cin, listaMedico[contador_medico].nome);
+        fflush(stdin);
+        do {
+            imprimirListaEspecialidade(listaEspecialidade, contador_especialidade);
+            cout << "\nDigite o codigo de Especialidade: ";
+            cin >> listaMedico[contador_medico].codigoEspecialidade;
+            validacao = existeEspecialidade(listaMedico[contador_medico].codigoEspecialidade, listaEspecialidade, contador_especialidade);
+            if (!validacao) {
+                cout << "\nCodigo de especialidade nao existe, Por favor digite outro valor";
+            }
+        } while (!validacao);
+        cout << "\nDigite o endereco: ";
+        fflush(stdin);
+        getline(cin, listaMedico[contador_medico].endereco);
+        fflush(stdin);
+        do {
+            cout << "\nDigite o telefone: ";
+            gets(listaMedico[contador_medico].telefone);
+            if(strlen(listaMedico[contador_medico].telefone) != 14){
+                cout << "\nTelefone invalido, tente escriver ele nessa modelo (xx)xxxxx-xxxx";
+            }
+        }while(strlen(listaMedico[contador_medico].telefone) != 14);
+        do {
+            imprimirListaCidade(listaCidade,contador_cidade);
+            cout << "\nDigite o codigo da Cidade: ";
+            cin >> listaMedico[contador_medico].codigoCidade;
+            validacao = existeCidade(listaMedico[contador_medico].codigoCidade, listaCidade, contador_cidade);
+            if (!validacao) {
+                cout << "\nCodigo de cidade nao existe, Por favor digite outro valor";
+            }
+        } while (!validacao);
+    }else{
+        if(contador_especialidade == 0){
+            cout << "\nLista de especialide Vazia, por fazer registre uma especialidade primeiro :C";
+        }else{
+            cout << "\nLista de cidade Vazia, por fazer registre uma cidade primeiro :C";
+        }
+    }
+}
 
 struct paciente {
     int CPF;
@@ -395,7 +409,7 @@ int main() {
             case 5:
                 if (contador_medico < tamanho_medico) {
                     do {
-                        listaMedico[contador_medico].lerMedico(listaEspecialidade,contador_especialidade,listaCidade,contador_cidade);
+                        lerMedico(listaMedico,contador_medico,listaEspecialidade,contador_especialidade,listaCidade,contador_cidade);
                         system("cls");
                         listaMedico[contador_medico].imprimirMedico();
                         cout << "\nConfirmar (1-SIM) (0-NAO) (3-CANCELAR): ";
