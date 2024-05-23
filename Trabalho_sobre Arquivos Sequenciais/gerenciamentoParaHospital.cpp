@@ -125,13 +125,13 @@ struct medicamento {
     }
 };
 
-bool existeEspecialidade(int codigo_entrada, struct especialidade listaEspecialidade[], int contador_especialidade){
+especialidade buscaEspecialidade(int codigo_entrada, struct especialidade listaEspecialidade[], int contador_especialidade){
     for(int i = contador_especialidade-1; i > -1;i--){
         if(codigo_entrada == listaEspecialidade[i].codigo){
-            return true;
+            return listaEspecialidade[i];
         }
     }
-    return false;
+    return especialidade{-1,""};
 };
 
 void imprimirListaEspecialidade(struct especialidade listaEspecialidade[], int contador_especialidade){
@@ -141,13 +141,13 @@ void imprimirListaEspecialidade(struct especialidade listaEspecialidade[], int c
     }
 }
 
-bool existeCidade(int codigo_entrada, struct cidade listaCidade[], int contador_cidade){
+cidade buscaCidade(int codigo_entrada, struct cidade listaCidade[], int contador_cidade){
     for(int i = contador_cidade-1; i > -1;i--){
         if(codigo_entrada == listaCidade[i].codigo){
-            return true;
+            return listaCidade[i];
         }
     }
-    return false;
+    return cidade{-1,""};
 }
 
 void imprimirListaCidade(struct cidade listaCidade[], int contador_cidade){
@@ -157,34 +157,32 @@ void imprimirListaCidade(struct cidade listaCidade[], int contador_cidade){
     }
 }
 
-
-
 struct medico {
     int codigo;
     string nome;
-    int codigoEspecialidade;
+    especialidade codigoEspecialidade;
     string endereco;
     char telefone[14];
-    int codigoCidade;
+    cidade codigoCidade;
 
 };
 
-void imprimirMedico(struct medico listaMedico[],int contador_medico) const {
+void imprimirMedico(struct medico listaMedico[],int contador_medico){
     cout << "\nMedico: " << listaMedico[contador_medico].codigo;
     cout << "\nNome: \t" << listaMedico[contador_medico].nome;
-    cout << "\nCodigo Especialidade: \t" << listaMedico[contador_medico].codigoEspecialidade;
+    listaMedico[contador_medico].codigoEspecialidade.imprimirEspecialidade();
     cout << "\nEndereco: \t" << listaMedico[contador_medico].endereco;
     cout << "\nTelefone: \t" << listaMedico[contador_medico].telefone;
-    cout << "\nCodigo Cidade: \t" << listaMedico[contador_medico].codigoCidade;
+    listaMedico[contador_medico].codigoCidade.imprimirCidade();
 }
 
-bool existeMedico(int codigo, struct medico listaMedico[], int contador_medico) {
+medico buscaMedico(int codigo_entrada, struct medico listaMedico[], int contador_medico) {
     for(int i= contador_medico - 1; i > -1; i--){
-        if (codigo == listaMedico[i].codigo){
-            return true;
+        if (codigo_entrada == listaMedico[i].codigo){
+            return listaMedico[i];
         }
     }
-    return false;
+    return medico{-1};
 }
 
 
@@ -196,11 +194,15 @@ void lerMedico(struct medico listaMedico[], int contador_medico, struct especial
         do {
             cout << "\nDigite o codigo do medico: ";
             cin >> codigo;
-            validacao = existeMedico(codigo,listaMedico,contador_medico);
-            if(validacao){
+            listaMedico[contador_medico] = buscaMedico(codigo,listaMedico,contador_medico);
+            if(listaMedico[contador_medico].codigo != -1){
+                validacao = true;
+                listaMedico[contador_medico].codigo = codigo;
+            }else {
                 cout << "\nCodigo de medico ja existe, Por favor digite outro codigo";
+                validacao = false;
             }
-        }while(validacao);
+        }while(!validacao);
         cout << "\nDigite o nome do medico: ";
         fflush(stdin);
         getline(cin, listaMedico[contador_medico].nome);
@@ -208,10 +210,13 @@ void lerMedico(struct medico listaMedico[], int contador_medico, struct especial
         do {
             imprimirListaEspecialidade(listaEspecialidade, contador_especialidade);
             cout << "\nDigite o codigo de Especialidade: ";
-            cin >> listaMedico[contador_medico].codigoEspecialidade;
-            validacao = existeEspecialidade(listaMedico[contador_medico].codigoEspecialidade, listaEspecialidade, contador_especialidade);
-            if (!validacao) {
+            cin >> codigo;
+            listaMedico[contador_medico].codigoEspecialidade = buscaEspecialidade(codigo, listaEspecialidade, contador_especialidade);
+            if (listaMedico[contador_medico].codigoEspecialidade.codigo != -1) {
+                validacao = true;
+            }else {
                 cout << "\nCodigo de especialidade nao existe, Por favor digite outro valor";
+                validacao = false;
             }
         } while (!validacao);
         cout << "\nDigite o endereco: ";
@@ -228,10 +233,13 @@ void lerMedico(struct medico listaMedico[], int contador_medico, struct especial
         do {
             imprimirListaCidade(listaCidade,contador_cidade);
             cout << "\nDigite o codigo da Cidade: ";
-            cin >> listaMedico[contador_medico].codigoCidade;
-            validacao = existeCidade(listaMedico[contador_medico].codigoCidade, listaCidade, contador_cidade);
-            if (!validacao) {
+            cin >> codigo;
+            listaMedico[contador_medico].codigoCidade = buscaCidade(codigo, listaCidade, contador_cidade);
+            if (listaMedico[contador_medico].codigoCidade.codigo != -1) {
+                validacao = true;
+            }else {
                 cout << "\nCodigo de cidade nao existe, Por favor digite outro valor";
+                validacao = false;
             }
         } while (!validacao);
     }else{
@@ -247,8 +255,40 @@ struct paciente {
     int CPF;
     string nome;
     string endereco;
-    int codigoCidade;
+    cidade codigoCidade;
 };
+
+paciente buscaPaciente(int codigo_entrada, struct paciente listaPaciente[], int contador_paciente) {
+    for(int i= contador_paciente - 1; i > -1; i--){
+        if (codigo_entrada == listaPaciente[i].CPF){
+            return listaPaciente[i];
+        }
+    }
+    return paciente{-1};
+}
+
+void lerPaciente(struct paciente listaPaciente[], int contador_paciente, struct cidade listaCidade[], int contador_cidade){
+    if(contador_cidade > 0) {
+        bool validacao;
+        int codigo;
+        do {
+            cout << "\nDigite o cpf do paciente: ";
+            cin >> codigo;
+            listaPaciente[contador_paciente] = buscaPaciente(codigo, listaPaciente,contador_paciente);
+            if (listaPaciente[contador_paciente].CPF != -1) {
+                validacao = true;
+                listaPaciente[contador_paciente].CPF = codigo;
+            }else {
+                cout << "\nCPF do paciente ja existe, Por favor digite outro cpf";
+                validacao = false;
+            }
+        }while(!validacao);
+    }else {
+        cout << "\nLista de cidade Vazia, por favor registre uma cidade primeiro :C";
+    }
+}
+
+void
 
 struct datetime {
     int ano;
@@ -324,9 +364,19 @@ int main() {
 
     /*DADOS INJETADOS DE MEDICO*/
 
-    listaMedico[0] = {1,"Robeto",2,"Augusta Melo, 535","(18)9912-2123",1};
-    listaMedico[1] = {3,"Alex",3,"Daniel Cruz, 991","(18)9933-3323",4};
-    listaMedico[2] = {4,"Rodrigo",2,"Jose Nogueira, 123","(18)9001-0013",4};
+    listaMedico[0] = {1,"Robeto",listaEspecialidade[0],"Augusta Melo, 535","(18)9912-2123",listaCidade[0]};
+    listaMedico[1] = {3,"Alex",listaEspecialidade[1],"Daniel Cruz, 991","(18)9933-3323",listaCidade[2]};
+    listaMedico[2] = {4,"Rodrigo",listaEspecialidade[0],"Jose Nogueira, 123","(18)9001-0013",listaCidade[2]};
+
+    int tamanho_paciente = 10;
+    int contador_paciente = 3;
+    paciente listaPaciente[tamanho_paciente];
+
+    /*DADOS INJETADOS DE PACIENTE*/
+
+    listaPaciente[0] = {};
+    listaPaciente[1] = {};
+    listaPaciente[2] = {};
 
     int op = 1;
     while (op != 0) {
@@ -338,6 +388,7 @@ int main() {
         cout << "\n3 - Ler CID";
         cout << "\n4 - Ler Medicamento";
         cout << "\n5 - Ler Medico";
+        cout << "\n6 - Ler Paciente";
 
         cout << "\n\nDigite qual acão deseja fazer: ";
         cin >> op;
@@ -411,7 +462,7 @@ int main() {
                     do {
                         lerMedico(listaMedico,contador_medico,listaEspecialidade,contador_especialidade,listaCidade,contador_cidade);
                         system("cls");
-                        listaMedico[contador_medico].imprimirMedico();
+                        imprimirMedico(listaMedico,contador_medico);
                         cout << "\nConfirmar (1-SIM) (0-NAO) (3-CANCELAR): ";
                         cin >> confirmacao;
                     } while (confirmacao == 0);
@@ -422,6 +473,13 @@ int main() {
                     cout << "\nLista de Medico cheia :C";
                 }
                 break;
+            /*case 6:
+                if (contador_paciente < tamanho_paciente) {
+                    do {
+
+                    }while()
+                }
+                break;*/
             default:
                 break;
         }
