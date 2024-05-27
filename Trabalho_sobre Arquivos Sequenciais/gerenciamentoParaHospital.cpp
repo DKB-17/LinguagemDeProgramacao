@@ -168,13 +168,21 @@ struct medico {
 
 };
 
-void imprimirMedico(struct medico listaMedico[],int contador_medico){
-    cout << "\nMedico: " << listaMedico[contador_medico].codigo;
-    cout << "\nNome: \t" << listaMedico[contador_medico].nome;
-    listaMedico[contador_medico].codigoEspecialidade.imprimirEspecialidade();
-    cout << "\nEndereco: \t" << listaMedico[contador_medico].endereco;
-    cout << "\nTelefone: \t" << listaMedico[contador_medico].telefone;
-    listaMedico[contador_medico].codigoCidade.imprimirCidade();
+void imprimirMedico(struct medico medico){
+    cout << "\nMedico: " << medico.codigo;
+    cout << "\nNome: \t" << medico.nome;
+    medico.codigoEspecialidade.imprimirEspecialidade();
+    cout << "\nEndereco: \t" << medico.endereco;
+    cout << "\nTelefone: \t" << medico.telefone;
+    medico.codigoCidade.imprimirCidade();
+}
+
+void imprimirListaMedico(struct medico listaMedico[], int contador_medico){
+    system("cls");
+    for(int i=0; i<contador_medico;i++){
+        imprimirMedico(listaMedico[i]);
+        cout << endl;
+    }
 }
 
 medico buscaMedico(int codigo_entrada, struct medico listaMedico[], int contador_medico) {
@@ -244,11 +252,13 @@ void lerMedico(struct medico listaMedico[], int contador_medico, struct especial
             }
         } while (!validacao);
     }else{
-        if(contador_especialidade == 0){
+        if(contador_especialidade < 1){
             cout << "\nLista de especialide Vazia, por fazer registre uma especialidade primeiro :C";
-        }else{
+        }
+        if(contador_cidade < 1){
             cout << "\nLista de cidade Vazia, por fazer registre uma cidade primeiro :C";
         }
+        getch();
     }
 }
 
@@ -259,22 +269,22 @@ struct paciente {
     cidade codigoCidade;
 };
 
-void imprimirPaciente(struct paciente listaPaciente[], int contador_paciente) {
-    cout << "\n\tPaciente: \t" << listaPaciente[contador_paciente].CPF;
-    cout << "\n\tNome: \t\t" << listaPaciente[contador_paciente].nome;
-    cout << "\n\tEndereco: \t" << listaPaciente[contador_paciente].endereco;
-    listaPaciente[contador_paciente].codigoCidade.imprimirCidade();
+void imprimirPaciente(const struct paciente& paciente) {
+    cout << "\n\tPaciente: \t" << paciente.CPF;
+    cout << "\n\tNome: \t\t" << paciente.nome;
+    cout << "\n\tEndereco: \t" << paciente.endereco;
+    paciente.codigoCidade.imprimirCidade();
 }
 
 void imprimirListaPaciente(paciente listaPacientes[], int contador_paciente) {
     system("cls");
     for(int i=0; i<contador_paciente; i++) {
         cout << "\nCodigo [" << i << "]:";
-        imprimirPaciente(listaPacientes,i);
+        imprimirPaciente(listaPacientes[i]);
     }
 }
 
-paciente buscaPaciente(string codigo_entrada, struct paciente listaPaciente[], int contador_paciente) {
+paciente buscaPaciente(const string& codigo_entrada, struct paciente listaPaciente[], int contador_paciente) {
     for(int i= contador_paciente - 1; i > -1; i--){
         if (!(codigo_entrada.compare(listaPaciente[i].CPF))){
             return listaPaciente[i];
@@ -339,38 +349,43 @@ void lerPaciente(struct paciente listaPaciente[], int contador_paciente, struct 
         }while(!validacao);
     }else {
         cout << "\nLista de cidade Vazia, por favor registre uma cidade primeiro :C";
+        getch();
     }
 }
 
 void removerRegistroPaciente(struct paciente listaPaciente[], int *contador_paciente){
-    int codigo_remocao;
-    int confirmacao;
-    do {
+    if(contador_paciente > 0) {
+        int codigo_remocao;
+        int confirmacao;
         do {
+            do {
+                system("cls");
+                imprimirListaPaciente(listaPaciente,*contador_paciente);
+                cout << "\n\nQual registro deseja remover: (-1 Cancelar remoção) ";
+                cin >> codigo_remocao;
+                if(codigo_remocao >= *contador_paciente || codigo_remocao < -1) {
+                    cout << "Codigo de remocao nao pertece a lista, :C";
+                    getch();
+                }else if(codigo_remocao == -1){
+                    return ;
+                }
+            }while(codigo_remocao >= *contador_paciente || codigo_remocao < -1);
             system("cls");
-            imprimirListaPaciente(listaPaciente,*contador_paciente);
-            cout << "\n\nQual registro deseja remover: (-1 Cancelar remoção) ";
-            cin >> codigo_remocao;
-            if(codigo_remocao >= *contador_paciente || codigo_remocao < -1) {
-                cout << "Codigo de remocao nao pertece a lista, :C";
-                getch();
-            }else if(codigo_remocao == -1){
-                return ;
+            imprimirPaciente(listaPaciente[codigo_remocao]);
+            cout << "\n\nConfirmar (1-SIM) (0-NAO) (3-CANCELAR): ";
+            cin >> confirmacao;
+        }while(confirmacao == 0);
+        if(confirmacao == 1) {
+            while(codigo_remocao < (*contador_paciente - 1)){
+                listaPaciente[codigo_remocao] = listaPaciente[codigo_remocao + 1];
+                codigo_remocao ++;
             }
-        }while(codigo_remocao >= *contador_paciente || codigo_remocao < -1);
-        system("cls");
-        imprimirPaciente(listaPaciente, codigo_remocao);
-        cout << "\n\nConfirmar (1-SIM) (0-NAO) (3-CANCELAR): ";
-        cin >> confirmacao;
-    }while(confirmacao == 0);
-    if(confirmacao == 1) {
-        while(codigo_remocao < (*contador_paciente - 1)){
-            listaPaciente[codigo_remocao] = listaPaciente[codigo_remocao + 1];
-            codigo_remocao ++;
+            *contador_paciente = *contador_paciente - 1;
         }
-        *contador_paciente = *contador_paciente - 1;
+    }else {
+        cout << "\nLista de Paciente Vazia, nao tem oque remover";
+        getch();
     }
-    cout << contador_paciente;
 }
 
 struct datetime {
@@ -388,15 +403,86 @@ struct timestamp {
 struct consulta {
     paciente cpfPaciente;
     medico codMedico;
-    datetime data;
-    timestamp horario;
+    //datetime data;
+    //timestamp horario;
+    string dataHora;
     CID codCID;
     medicamento codMedicamento;
     int qtdeMedicamento;
 };
 
-void agendarConsulta(struct consulta listaConsulta[], int contador_consulta, struct paciente listaPaciente[], int contador_paciente) {
+void imprimirConsulta(const struct consulta& consulta) {
+    cout << "\n\tConsulta: ";
+    imprimirPaciente(consulta.cpfPaciente);
+    imprimirMedico(consulta.codMedico);
 
+    cout << "Data(dd/mm/yy hh:MM:ss): " << consulta.dataHora;
+
+    consulta.codCID.imprimirCID();
+    consulta.codMedicamento.imprimirMedicamento();
+    cout << "\n\tQtd Medicamento: " << consulta.qtdeMedicamento;
+}
+
+void agendarConsulta(struct consulta consulta, struct paciente listaPaciente[], int contador_paciente, struct medico listaMedico[], int contador_medico) {
+    if(contador_paciente > 0 && contador_medico > 0) {
+        bool validacao;
+        string CPF;
+        int codigo;
+        do {
+            imprimirListaPaciente(listaPaciente,contador_paciente);
+            cout << "\nDigite o CPF do paciente: ";
+            cin >> CPF;
+            consulta.cpfPaciente = buscaPaciente(CPF,listaPaciente,contador_paciente);
+            if(consulta.cpfPaciente.CPF.empty()) {
+                cout << "\nEste CPF nao existe na lista de paciente :C";
+                validacao = false;
+                getch();
+            }else{
+                validacao = true;
+            }
+        }while(!validacao);
+        do {
+            imprimirListaMedico(listaMedico, contador_medico);
+            cout << "\nDigite o codigo do medico: ";
+            cin >> codigo;
+            consulta.codMedico = buscaMedico(codigo, listaMedico, contador_medico);
+            if(consulta.codMedico.codigo == -1) {
+                cout << "\nEste codigo nao existe na lista de medico :C";
+                validacao = false;
+                getch();
+            }else {
+                validacao = true;
+            }
+        }while(!validacao);
+
+        do {
+            cout << "Digite o data e hora: (dd/mm/yy hh:MM:ss) ";
+            fflush(stdin);
+            getline(cin, consulta.dataHora);
+            fflush(stdin);
+            if(consulta.dataHora.size() > 16 && consulta.dataHora.find('/') && consulta.dataHora.find(':')) {
+                validacao = true;
+            }else {
+                validacao = false;
+                cout << "\nData e hora incorretas :C";
+                cout << "\nExemplo: 11/11/11 11:11:11";
+            }
+        }while(!validacao);
+
+
+
+
+
+
+    }else {
+        if(contador_paciente < 1){
+            cout << "\nLista de paciente Vazia, por favor registre um paciente primeiro :C";
+        }
+        if(contador_medico < 1) {
+            cout << "\nLista de medico Vazia, por favor registre um medico primeiro :C";
+        }
+        getch();
+    }
 }
 
 
@@ -563,7 +649,7 @@ int main() {
                     do {
                         lerMedico(listaMedico,contador_medico,listaEspecialidade,contador_especialidade,listaCidade,contador_cidade);
                         system("cls");
-                        imprimirMedico(listaMedico,contador_medico);
+                        imprimirMedico(listaMedico[contador_medico]);
                         cout << "\nConfirmar (1-SIM) (0-NAO) (3-CANCELAR): ";
                         cin >> confirmacao;
                     } while (confirmacao == 0);
@@ -579,7 +665,7 @@ int main() {
                     do {
                         lerPaciente(listaPaciente,contador_paciente,listaCidade,contador_cidade);
                         system("cls");
-                        imprimirPaciente(listaPaciente,contador_paciente);
+                        imprimirPaciente(listaPaciente[contador_paciente]);
                         cout << "\nConfirmar (1-SIM) (0-NAO) (3-CANCELAR): ";
                         cin >> confirmacao;
                     }while(confirmacao == 0);
@@ -594,7 +680,20 @@ int main() {
                 removerRegistroPaciente(listaPaciente, &contador_paciente);
                 break;
             case 8:
-                agendarConsulta(listaPaciente,contador_paciente);
+                if(contador_consulta < tamanho_consulta) {
+                    do {
+                        agendarConsulta(listaConsulta[contador_consulta], listaPaciente,contador_paciente, listaMedico, contador_medico);
+                        system("cls");
+                        imprimirConsulta(listaConsulta[contador_consulta]);
+                        cout << "\nConfirmar (1-SIM) (0-NAO) (3-CANCELAR): ";
+                        cin >> confirmacao;
+                    }while(confirmacao == 0);
+                    if(confirmacao == 1) {
+                        contador_consulta ++;
+                    }
+                }else {
+                    cout << "\nLista de consulta cheia :C";
+                }
                 break;
             default:
                 break;
