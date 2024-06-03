@@ -5,26 +5,40 @@
 
 using namespace std;
 
+/*Funcao para limpeza da tela do terminal*/
 void limparTela(){
     system("cls");
 }
 
+/*Estrutura cidade*/
 struct cidade {
     int codigo;
     string nome;
     string UF;
 };
 
+/*Funcao ultilizada para imprimir as informacoes de uma estrutura cidade*/
 void imprimirCidade(const struct cidade &cidade) {
         cout << "\nCidade: \t" << cidade.codigo;
         cout << "\nNome: \t\t" << cidade.nome;
         cout << "\nUF: \t\t" << cidade.UF;
 }
 
-cidade* buscarCidade(int codigo_entrada, struct cidade listaCidade[], int contador_cidade) {
-    for (int i = contador_cidade - 1; i > -1; i--) {
-        if (codigo_entrada == listaCidade[i].codigo) {
-            return &listaCidade[i];
+/*Funcao utilizada para busca na lista de entrada(ListaCidade) interando pelo seu contador no processo de busca
+binaria, onde na ocorrencia de uma registro com o mesmo valor atribuido(codigo_buscado) retorna o registro encontrado
+com os dados e informacoes do registro em metodo de ponteiro para que todos dados seja conectados por blocos de
+memoria apontados pelo sistema.*/
+cidade* buscarCidade(int codigo_buscado, struct cidade listaCidade[], int contador_cidade) {
+    int min = 0;
+    int max = contador_cidade - 1;
+    while(max > min){
+        int meio = (int)(min + max) / 2;
+        if(listaCidade[meio].codigo == codigo_buscado){
+            return &listaCidade[meio];
+        } else if(listaCidade[meio].codigo > codigo_buscado){
+            max = meio - 1;
+        } else{
+            min = meio;
         }
     }
     return NULL;
@@ -305,6 +319,7 @@ void lerMedico(struct medico listaMedico[], int contador_medico, struct especial
             } else {
                 cout << "\nCodigo de cidade nao existe, Por favor digite outro valor";
                 validacao = false;
+                getch();
             }
         } while (!validacao);
     } else {
@@ -360,8 +375,8 @@ void lerPaciente(struct paciente listaPaciente[], int contador_paciente, struct 
             fflush(stdin);
             getline(cin, CPF);
             fflush(stdin);
-            listaPaciente[contador_paciente] = *buscarPaciente(CPF, listaPaciente, contador_paciente);
-            if (listaPaciente[contador_paciente].CPF.empty()) {
+            listaPaciente[contador_paciente] = buscarPaciente(CPF, listaPaciente, contador_paciente);
+            if (listaPaciente[contador_paciente] == NULL) {
                 if (CPF.size() > 13) {
                     validacao = true;
                     listaPaciente[contador_paciente].CPF = CPF;
