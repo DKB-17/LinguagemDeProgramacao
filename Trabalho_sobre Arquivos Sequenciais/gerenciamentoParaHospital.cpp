@@ -51,62 +51,21 @@ struct medicamento {
     int estoqueMaximo;
     float precoUnitario;
 
-    void lerMedicamento() {
-        limparTela();
-        cout << "\nDigite o codigo do medicamento: ";
-        cin >> codigo;
-        cout << "\nDigite o nome do medicamento: ";
-        fflush(stdin);
-        getline(cin, nome);
-        fflush(stdin);
-        do {
-            cout << "\nDigite a quantidade no Estoque: ";
-            cin >> quantEstoque;
-            if (quantEstoque < 0) {
-                cout << "\nQuantidade negativo, Por favor digite outro valor";
-            }
-        } while (quantEstoque < 0);
-        do {
-            cout << "\nDigite a quantidade de estoque Minimo: ";
-            cin >> estoqueMinimo;
-            if (estoqueMinimo < 0) {
-                cout << "\nQuantidade negativo, Por favor digite outro valor";
-            }
-        } while (estoqueMinimo < 0);
-        do {
-            cout << "\nDigite a quantidade de estoque Maximo: ";
-            cin >> estoqueMaximo;
-            if (estoqueMinimo > estoqueMaximo) {
-                cout << "\nEstoque maximo esta menor que o minino :C, Por favor digite outro valor";
-            }
-        } while (estoqueMinimo > estoqueMaximo);
-        do {
-            cout << "\nDigite o valor unitario de cada medicamento: ";
-            cin >> precoUnitario;
-            if (precoUnitario < 0) {
-                cout << "\nValor negativo, Por favor digite outro valor";
-            }
-        } while (precoUnitario < 0);
-    }
-
-    void imprimirMedicamento() const {
-        cout << "\nMedicamento: \t\t" << codigo;
-        cout << "\nNome: \t\t\t" << nome;
-        cout << "\nQuantidade no Estoque: \t" << quantEstoque;
-        cout << "\nEstoque minimo: \t" << estoqueMinimo;
-        cout << "\nEstoque maximo: \t" << estoqueMaximo;
-        cout << "\nPreco Unitario: \t" << precoUnitario;
-    }
-
-    void reduzirEstoque(int saida) {
-        quantEstoque -= saida;
-    }
 };
+void imprimirMedicamento(const struct medicamento &medicamento) {
+        cout << "\nMedicamento: \t\t" << medicamento.codigo;
+        cout << "\nNome: \t\t\t" << medicamento.nome;
+        cout << "\nQuantidade no Estoque: \t" << medicamento.quantEstoque;
+        cout << "\nEstoque minimo: \t" << medicamento.estoqueMinimo;
+        cout << "\nEstoque maximo: \t" << medicamento.estoqueMaximo;
+        cout << "\nPreco Unitario: \t" << medicamento.precoUnitario;
+    }
+
 
 void imprimirListaMedicamento(struct medicamento listaMedicamento[], int contador_medicamento) {
     limparTela();
     for(int i = 0; i < contador_medicamento; i++) {
-        listaMedicamento[i].imprimirMedicamento();
+        imprimirMedicamento(listaMedicamento[i]);
         cout << endl;
     }
 }
@@ -119,6 +78,49 @@ medicamento* buscarMedicamento(int codigo_entrada, struct medicamento listaMedic
     }
     return NULL;
 }
+
+void lerMedicamento(struct medicamento listaMedicamento[], int contador_medicamento) {
+        limparTela();
+        cout << "\nDigite o codigo do medicamento: ";
+        cin >> listaMedicamento[contador_medicamento].codigo;
+        cout << "\nDigite o nome do medicamento: ";
+        fflush(stdin);
+        getline(cin, listaMedicamento[contador_medicamento].nome);
+        fflush(stdin);
+        do {
+            cout << "\nDigite a quantidade no Estoque: ";
+            cin >> listaMedicamento[contador_medicamento].quantEstoque;
+            if (listaMedicamento[contador_medicamento].quantEstoque < 0) {
+                cout << "\nQuantidade negativo, Por favor digite outro valor";
+            }
+        } while (listaMedicamento[contador_medicamento].quantEstoque < 0);
+        do {
+            cout << "\nDigite a quantidade de estoque Minimo: ";
+            cin >> listaMedicamento[contador_medicamento].estoqueMinimo;
+            if (listaMedicamento[contador_medicamento].estoqueMinimo < 0) {
+                cout << "\nQuantidade negativo, Por favor digite outro valor";
+            }
+        } while (listaMedicamento[contador_medicamento].estoqueMinimo < 0);
+        do {
+            cout << "\nDigite a quantidade de estoque Maximo: ";
+            cin >> listaMedicamento[contador_medicamento].estoqueMaximo;
+            if (listaMedicamento[contador_medicamento].estoqueMinimo > listaMedicamento[contador_medicamento].estoqueMaximo) {
+                cout << "\nEstoque maximo esta menor que o minino :C, Por favor digite outro valor";
+            }
+        } while (listaMedicamento[contador_medicamento].estoqueMinimo > listaMedicamento[contador_medicamento].estoqueMaximo);
+        do {
+            cout << "\nDigite o valor unitario de cada medicamento: ";
+            cin >> listaMedicamento[contador_medicamento].precoUnitario;
+            if (listaMedicamento[contador_medicamento].precoUnitario < 0) {
+                cout << "\nValor negativo, Por favor digite outro valor";
+            }
+        } while (listaMedicamento[contador_medicamento].precoUnitario < 0);
+    }
+
+
+    void reduzirEstoque(struct medicamento* medicamento, int saida) {
+        medicamento->quantEstoque -= saida;
+    }
 
 struct medico {
     int codigo;
@@ -385,7 +387,7 @@ void imprimirConsulta(const struct consulta &consulta) {
     cout << "\nData(dd/mm/yy hh:MM:ss): " << consulta.dataHora;
 
     imprimirCID(consulta.codCID);
-    consulta.codMedicamento.imprimirMedicamento();
+    imprimirMedicamento(consulta.codMedicamento);
     cout << "\nQtd usado do Medicamento: \t" << consulta.qtdeMedicamento;
 }
 
@@ -473,7 +475,7 @@ agendarConsulta(struct consulta *consulta, struct paciente listaPaciente[], int 
         } while (!validacao);
 
         do {
-            consulta->codMedicamento.imprimirMedicamento();
+            imprimirMedicamento(consulta->codMedicamento);
             cout << "\nDigite a quantidade de medicamento que sera usado: ";
             cin >> consulta->qtdeMedicamento;
             if(consulta->qtdeMedicamento > consulta->codMedicamento.quantEstoque){
@@ -653,9 +655,9 @@ int main() {
         }else if(op == 4){
                 if (contador_medicamento < tamanho_medicamento) {
                     do {
-                        listaMedicamento[contador_medicamento].lerMedicamento();
+                        lerMedicamento(listaMedicamento,contador_medicamento);
                         limparTela();
-                        listaMedicamento[contador_medicamento].imprimirMedicamento();
+                        imprimirMedicamento(listaMedicamento[contador_medicamento]);
                         cout << "\nConfirmar (1-SIM) (0-NAO) (3-CANCELAR): ";
                         cin >> confirmacao;
                     } while (confirmacao == 0);
@@ -710,7 +712,9 @@ int main() {
                         cin >> confirmacao;
                     } while (confirmacao == 0);
                     if (confirmacao == 1) {
-                        buscarMedicamento(listaConsulta[contador_consulta].codMedicamento.codigo,listaMedicamento,contador_medicamento)->reduzirEstoque(listaConsulta[contador_consulta].qtdeMedicamento);
+                        reduzirEstoque(buscarMedicamento(listaConsulta[contador_consulta].codMedicamento.codigo,
+                        listaMedicamento,
+                        contador_medicamento),listaConsulta[contador_consulta].qtdeMedicamento);
                         contador_consulta++;
                     }
                 } else {
@@ -730,7 +734,7 @@ int main() {
                         cin >> i;
                         encontrado = buscarMedicamento(i,listaMedicamento,contador_medicamento);
                         if(encontrado != NULL) {
-                            encontrado->imprimirMedicamento();
+                            imprimirMedicamento(*encontrado);
                             cout << "\nTotal em estoque: \t" << (encontrado->quantEstoque * encontrado
                                     ->precoUnitario);
                             validacao = true;
@@ -749,7 +753,7 @@ int main() {
                     float soma = 0.0;
                     for(int i=0;i<contador_medicamento;i++) {
                         if(listaMedicamento[i].quantEstoque < listaMedicamento[i].estoqueMinimo) {
-                            listaMedicamento[i].imprimirMedicamento();
+                            imprimirMedicamento(listaMedicamento[i]);
                             int quantidadeAComprar = listaMedicamento[i].estoqueMaximo -
                                                      listaMedicamento[i].quantEstoque;
                             cout << "\nQtd a comprar: \t\t" << quantidadeAComprar;
