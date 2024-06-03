@@ -5,10 +5,7 @@
 
 using namespace std;
 
-/*Funcao para limpeza da tela do terminal*/
-void limparTela(){
-    system("cls");
-}
+void limparTela();
 
 /*Estrutura cidade*/
 struct cidade {
@@ -17,138 +14,34 @@ struct cidade {
     string UF;
 };
 
-/*Funcao ultilizada para imprimir as informacoes de uma estrutura cidade*/
-void imprimirCidade(const struct cidade &cidade) {
-        cout << "\nCidade: \t" << cidade.codigo;
-        cout << "\nNome: \t\t" << cidade.nome;
-        cout << "\nUF: \t\t" << cidade.UF;
-}
+void imprimirCidade(const struct cidade &cidade);
+cidade* buscarCidade(int codigo_buscado, struct cidade listaCidade[], int contador_cidade);
+void imprimirListaCidade(struct cidade listaCidade[], int contador_cidade);
+void lerCidade(struct cidade listaCidade[], int contador_cidade);
 
-/*Funcao utilizada para busca na lista de entrada(ListaCidade) interando pelo seu contador no processo de busca
-binaria, onde na ocorrencia de uma registro com o mesmo valor atribuido(codigo_buscado) retorna o registro encontrado
-com os dados e informacoes do registro em metodo de ponteiro para que todos dados seja conectados por blocos de
-memoria apontados pelo sistema.*/
-cidade* buscarCidade(int codigo_buscado, struct cidade listaCidade[], int contador_cidade) {
-    int min = 0;
-    int max = contador_cidade - 1;
-    while(max > min){
-        int meio = (int)(min + max) / 2;
-        if(listaCidade[meio].codigo == codigo_buscado){
-            return &listaCidade[meio];
-        } else if(listaCidade[meio].codigo > codigo_buscado){
-            max = meio - 1;
-        } else{
-            min = meio;
-        }
-    }
-    return NULL;
-}
-
-void imprimirListaCidade(struct cidade listaCidade[], int contador_cidade) {
-    limparTela();
-    for (int i = 0; i < contador_cidade; i++) {
-        imprimirCidade(listaCidade[i]);
-        cout << endl;
-    }
-}
-void lerCidade(struct cidade listaCidade[], int contador_cidade) {
-    limparTela();
-    int codigo;
-    cidade* encontrado;
-    bool validacao;
-    do {
-        cout << "\nDigite o codigo da cidade: ";
-        cin >> codigo;
-        encontrado = buscarCidade(codigo,listaCidade,contador_cidade);
-        if(encontrado == NULL){
-            listaCidade[contador_cidade].codigo = codigo;
-            validacao = true;
-        }else{
-            cout << "\nEste codigo ja esta registrado na lista de cidade";
-            validacao = false;
-        }
-    }while(!validacao);
-    cout << "\nDigite o nome da cidade: ";
-    fflush(stdin);
-    getline(cin, listaCidade[contador_cidade].nome);
-    cout << "\nDigite a UF da cidade: ";
-    getline(cin, listaCidade[contador_cidade].UF);
-    fflush(stdin);
-}
-
+// Estrutura especialidade
 struct especialidade {
     int codigo;
     string descricao;
 
-    void lerEspecialidade() {
-        limparTela();
-        cout << "\nDigite o codigo da especialidade: ";
-        cin >> codigo;
-        cout << "\nDigite a descricao: ";
-        fflush(stdin);
-        getline(cin, descricao);
-        fflush(stdin);
-    }
-
-    void imprimirEspecialidade() const {
-        cout << "\nEspecialidade: \t" << codigo;
-        cout << "\nDescricao: \t" << descricao;
-    }
 };
 
-especialidade* buscarEspecialidade (int codigo_entrada, struct especialidade listaEspecialidade[], int contador_especialidade) {
-    for (int i = contador_especialidade - 1; i > -1; i--) {
-        if (codigo_entrada == listaEspecialidade[i].codigo) {
-            return &listaEspecialidade[i];
-        }
-    }
-    return NULL;
-};
-
-void imprimirListaEspecialidade(struct especialidade listaEspecialidade[], int contador_especialidade) {
-    limparTela();
-    for (int i = 0; i < contador_especialidade; i++) {
-        listaEspecialidade[i].imprimirEspecialidade();
-        cout << endl;
-    }
-}
+void imprimirEspecialidade(struct especialidade &especialidade);
+especialidade* buscarEspecialidade (int codigo_entrada, struct especialidade listaEspecialidade[], int
+contador_especialidade);
+void lerEspecialidade(struct especialidade listaEspecialidade[], int contador_especialidade);
+void imprimirListaEspecialidade(struct especialidade listaEspecialidade[], int contador_especialidade);
 
 struct CID {
     int codigo;
     string descricao;
 
-    void lerCID() {
-        limparTela();
-        cout << "\nDigite o codigo da CID: ";
-        cin >> codigo;
-        cout << "\nDigite a descricao: ";
-        fflush(stdin);
-        getline(cin, descricao);
-        fflush(stdin);
-    }
-
-    void imprimirCID() const {
-        cout << "\nCID: \t\t" << codigo;
-        cout << "\nDescricao: \t" << descricao;
-    }
 };
 
-void imprimirListaCID(struct CID listaCID[], int contador_cid) {
-    limparTela();
-    for (int i = 0; i < contador_cid; i++) {
-        listaCID[i].imprimirCID();
-        cout << endl;
-    }
-}
-
-CID* buscarCID(int codigo_entrada, struct CID listaCID[], int contador_cid) {
-    for (int i = 0; i < contador_cid; i++) {
-        if (codigo_entrada == listaCID[i].codigo) {
-            return &listaCID[i];
-        }
-    }
-    return NULL;
-}
+void imprimirCID(const struct CID &cid);
+void imprimirListaCID(struct CID listaCID[], int contador_cid);
+CID* buscarCID(int codigo_entrada, struct CID listaCID[], int contador_cid);
+void lerCID(struct CID listaCID[], int contador_cid);
 
 struct medicamento {
     int codigo;
@@ -239,7 +132,7 @@ struct medico {
 void imprimirMedico(const struct medico& medico) {
     cout << "\nMedico: \t" << medico.codigo;
     cout << "\nNome: \t\t" << medico.nome;
-    medico.codigoEspecialidade->imprimirEspecialidade();
+    imprimirEspecialidade(*medico.codigoEspecialidade);
     cout << "\nEndereco: \t" << medico.endereco;
     cout << "\nTelefone: \t" << medico.telefone;
     imprimirCidade(*medico.codigoCidade);
@@ -355,7 +248,7 @@ void imprimirListaPaciente(paciente listaPacientes[], int contador_paciente) {
     }
 }
 
-paciente* buscarPaciente(const string &codigo_entrada, struct paciente listaPaciente[], int contador_paciente) {
+paciente* buscarPaciente(string &codigo_entrada, struct paciente listaPaciente[], int contador_paciente) {
     for (int i = contador_paciente - 1; i > -1; i--) {
         if (!(codigo_entrada.compare(listaPaciente[i].CPF))) {
             return &listaPaciente[i];
@@ -369,14 +262,15 @@ void lerPaciente(struct paciente listaPaciente[], int contador_paciente, struct 
         bool validacao;
         string CPF;
         int codigo;
+        paciente *encontrado;
         limparTela();
         do {
             cout << "\nDigite o cpf do paciente: ";
             fflush(stdin);
             getline(cin, CPF);
             fflush(stdin);
-            listaPaciente[contador_paciente] = buscarPaciente(CPF, listaPaciente, contador_paciente);
-            if (listaPaciente[contador_paciente] == NULL) {
+            encontrado = buscarPaciente(CPF, listaPaciente, contador_paciente);
+            if (encontrado == NULL) {
                 if (CPF.size() > 13) {
                     validacao = true;
                     listaPaciente[contador_paciente].CPF = CPF;
@@ -490,7 +384,7 @@ void imprimirConsulta(const struct consulta &consulta) {
 
     cout << "\nData(dd/mm/yy hh:MM:ss): " << consulta.dataHora;
 
-    consulta.codCID.imprimirCID();
+    imprimirCID(consulta.codCID);
     consulta.codMedicamento.imprimirMedicamento();
     cout << "\nQtd usado do Medicamento: \t" << consulta.qtdeMedicamento;
 }
@@ -626,8 +520,8 @@ int main() {
     /*DADOS INJETADOS DE CIDADE*/
 
     listaCidade[0] = {1, "Assis", "SP"};
-    listaCidade[1] = {3, "Candido Mota", "SP"};
-    listaCidade[2] = {4, "Unai", "MG"};
+    listaCidade[1] = {2, "Candido Mota", "SP"};
+    listaCidade[2] = {5, "Unai", "MG"};
 
     int tamanho_especialidade = 10;
     int contador_especialidade = 3;
@@ -729,9 +623,9 @@ int main() {
         }else if(op == 2){
                 if (contador_especialidade < tamanho_especialidade) {
                     do {
-                        listaEspecialidade[contador_especialidade].lerEspecialidade();
+                        lerEspecialidade(listaEspecialidade,contador_especialidade);
                         limparTela();
-                        listaEspecialidade[contador_especialidade].imprimirEspecialidade();
+                        imprimirEspecialidade(listaEspecialidade[contador_especialidade]);
                         cout << "\nConfirmar (1-SIM) (0-NAO) (3-CANCELAR): ";
                         cin >> confirmacao;
                     } while (confirmacao == 0);
@@ -744,9 +638,9 @@ int main() {
         }else if(op == 3){
                 if (contador_cid < tamanho_cid) {
                     do {
-                        listaCID[contador_cid].lerCID();
+                        lerCID(listaCID,contador_cid);
                         limparTela();
-                        listaCID[contador_cid].imprimirCID();
+                        imprimirCID(listaCID[contador_cid]);
                         cout << "\nConfirmar (1-SIM) (0-NAO) (3-CANCELAR): ";
                         cin >> confirmacao;
                     } while (confirmacao == 0);
@@ -917,4 +811,157 @@ int main() {
         getch();
     }
     return 0;
+}
+
+/*Funcao para limpeza da tela do terminal*/
+void limparTela(){
+    system("cls");
+}
+
+/*Funcao ultilizada para imprimir as informacoes de uma estrutura cidade*/
+void imprimirCidade(const struct cidade &cidade) {
+        cout << "\nCidade: \t" << cidade.codigo;
+        cout << "\nNome: \t\t" << cidade.nome;
+        cout << "\nUF: \t\t" << cidade.UF;
+}
+
+/*Funcao utilizada para busca na lista de entrada(ListaCidade) interando pelo seu contador no processo de busca
+binaria, onde na ocorrencia de uma registro com o mesmo valor atribuido(codigo_buscado) retorna o registro encontrado
+com os dados e informacoes do registro em metodo de ponteiro para que todos dados seja conectados por blocos de
+memoria apontados pelo sistema.*/
+cidade* buscarCidade(int codigo_buscado, struct cidade listaCidade[], int contador_cidade) {
+    int min = 0;
+    int max = contador_cidade - 1;
+    while(max >= min){
+
+        int meio = (int)(min + max) / 2;
+        if(listaCidade[meio].codigo == codigo_buscado){
+            return &listaCidade[meio];
+        } else if(listaCidade[meio].codigo > codigo_buscado){
+            max = meio - 1;
+        } else{
+            min = meio + 1;
+        }
+    }
+    return NULL;
+}
+
+/*Funcao para impressao de uma lista(listaCidade) - ultilizando impressao linear das informacoes na lista*/
+void imprimirListaCidade(struct cidade listaCidade[], int contador_cidade) {
+    limparTela();
+    for (int i = 0; i < contador_cidade; i++) {
+        imprimirCidade(listaCidade[i]);
+        cout << endl;
+    }
+}
+
+/*Funcao para leitura da informacoes de uma cidade(struct cidade), armazenadas dentro de uma lista de valores da
+lista(listaCidade), no indice(contador)*/
+void lerCidade(struct cidade listaCidade[], int contador_cidade) {
+    limparTela();
+    int codigo;
+    cidade* encontrado;
+    bool validacao;
+    do {
+        cout << "\nDigite o codigo da cidade: ";
+        cin >> codigo;
+        //reponsavel pela validacao da existencia de um codigo ja registrado dentro da lista, a funcao buscarCidade
+        // retorna o endereco da memoria onde esta armazendo dentro da lista o registro com o codigo similar ao
+        // codigo novo a ser inserido , caso encontre e apontado o endereco de memoria, senao retorna um ponteiro
+        // para null.
+        encontrado = buscarCidade(codigo,listaCidade,contador_cidade);
+        if(encontrado == NULL){
+            listaCidade[contador_cidade].codigo = codigo;
+            validacao = true;
+        }else{
+            cout << "\nEste codigo ja esta registrado na lista de cidade";
+            validacao = false;
+        }
+    }while(!validacao);
+    cout << "\nDigite o nome da cidade: ";
+    fflush(stdin);
+    getline(cin, listaCidade[contador_cidade].nome);
+    cout << "\nDigite a UF da cidade: ";
+    getline(cin, listaCidade[contador_cidade].UF);
+    fflush(stdin);
+
+}
+// ------------------------------------- ESPECIALIDADE -----------------------------------------------
+
+void imprimirEspecialidade(struct especialidade &especialidade){
+        cout << "\nEspecialidade: \t" << especialidade.codigo;
+        cout << "\nDescricao: \t" << especialidade.descricao;
+}
+
+especialidade* buscarEspecialidade (int codigo_entrada, struct especialidade listaEspecialidade[], int contador_especialidade) {
+    for (int i = contador_especialidade - 1; i > -1; i--) {
+        if (codigo_entrada == listaEspecialidade[i].codigo) {
+            return &listaEspecialidade[i];
+        }
+    }
+    return NULL;
+};
+
+// Funcao para leitura de especialidade
+void lerEspecialidade(struct especialidade listaEspecialidade[], int contador_especialidade) {
+        limparTela();
+        int codigo;
+        bool validacao;
+        especialidade* encontrado;
+        do{
+        cout << "\nDigite o codigo da especialidade: ";
+        cin >> codigo;
+        encontrado = buscarEspecialidade(codigo, listaEspecialidade, contador_especialidade);
+        if (encontrado == NULL){
+            listaEspecialidade[contador_especialidade].codigo = codigo;
+            validacao = true;
+        }else{
+            cout << "\nEste codigo ja pretence a lista de Especialidade";
+            validacao = false;
+        }
+        }while(!validacao);
+        cout << "\nDigite a descricao: ";
+        fflush(stdin);
+        getline(cin, listaEspecialidade[contador_especialidade].descricao);
+        fflush(stdin);
+}
+
+void imprimirListaEspecialidade(struct especialidade listaEspecialidade[], int contador_especialidade) {
+    limparTela();
+    for (int i = 0; i < contador_especialidade; i++) {
+        imprimirEspecialidade(listaEspecialidade[i]);
+        cout << endl;
+    }
+}
+//-----------------------------------CID-----------------------------------------
+
+void imprimirCID(const struct CID &cid) {
+        cout << "\nCID: \t\t" << cid.codigo;
+        cout << "\nDescricao: \t" << cid.descricao;
+}
+
+void imprimirListaCID(struct CID listaCID[], int contador_cid) {
+    limparTela();
+    for (int i = 0; i < contador_cid; i++) {
+        imprimirCID(listaCID[i]);
+        cout << endl;
+    }
+}
+
+CID* buscarCID(int codigo_entrada, struct CID listaCID[], int contador_cid) {
+    for (int i = 0; i < contador_cid; i++) {
+        if (codigo_entrada == listaCID[i].codigo) {
+            return &listaCID[i];
+        }
+    }
+    return NULL;
+}
+void lerCID(struct CID listaCID[], int contador_cid) {
+        limparTela();
+        cout << "\nDigite o codigo da CID: ";
+        cin >> listaCID[contador_cid].codigo;
+        cout << "\nDigite a descricao: ";
+        fflush(stdin);
+        getline(cin, listaCID[contador_cid].descricao);
+        fflush(stdin);
 }
