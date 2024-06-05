@@ -77,6 +77,7 @@ medicamento* buscarMedicamento(int codigo_entrada, struct medicamento listaMedic
 /**Realiza a leitura de um medicamento*/
 void lerMedicamento(struct medicamento listaMedicamento[], int contador_medicamento);
 void reduzirEstoque(struct medicamento* medicamento, int saida);
+void adicionarEstoque(struct medicamento* medicamento, int entrada);
 
 /**Estrutura medico*/
 struct medico {
@@ -231,8 +232,9 @@ int main() {
         cout << "\n10 - Verificar minimos de estoque";
         cout << "\n11 - Arrecadacao de consulta";
         cout << "\n12 - Exibir total as listas";
+        cout << "\n13 - Adicionar estoque de medicamento";
 
-        cout << "\n\nDigite qual ac�o deseja fazer: ";
+        cout << "\n\nDigite qual acão deseja fazer: ";
         cin >> op;
         if (op == 0){
                 cout << "\nByeee!!!";
@@ -438,6 +440,35 @@ int main() {
                     imprimirListaMedicamento(listaMedicamento,contador_medicamento);
                     getch();
                 }
+        }else if(op == 13) {
+            if(contador_medicamento > 0) {
+                int i;
+                medicamento* encontrado;
+                int adicao;
+                do {
+                    limparTela();
+                    cout << "\nCodigos de medicamento"<<endl;
+                    for(i=0;i<contador_medicamento;i++) {
+                        cout << "\nMedicamento[" << i << "]: " << listaMedicamento[i].codigo;
+                    }
+                    cout << "\nDigite o codigo do medicament que deseja: ";
+                    cin >> i;
+                    encontrado = buscarMedicamento(i,listaMedicamento,contador_medicamento);
+                    if(encontrado != NULL) {
+                        imprimirMedicamento(*encontrado);
+                        cout << "\nDigite a quantidade que deseja adicionar: \t";
+                        cin >> adicao;
+                        adicionarEstoque(encontrado,adicao);
+                        validacao = true;
+                    }else {
+                        cout << "\nEste codigo nao existe na lista de medicamento :C";
+                        validacao = false;
+                    }
+                }while(!validacao);
+            }else {
+                cout << "\nLista de medicamento vazia :C";
+            }
+
         }else{
                 cout << "\nNao temos essa opcao:C ";
         }
@@ -848,6 +879,10 @@ void reduzirEstoque(struct medicamento* medicamento, int saida) {
     medicamento->quantEstoque -= saida;
 }
 
+void adicionarEstoque(struct medicamento* medicamento, int entrada) {
+    medicamento->quantEstoque += entrada ;
+}
+
 //-----------------------------------MEDICO-------------------------------------
 
 /** Funcao ultilizada para imprimir as informacoes de uma estrutura medico
@@ -900,15 +935,12 @@ void imprimirListaMedico(struct medico listaMedico[], int contador_medico) {
 */
 medico* buscarMedico(int codigo_entrada, struct medico listaMedico[], int contador_medico) {
     for (int i = 0; i < contador_medico; i++) {
-        if (listaMedico[i].codigo == codigo_entrado) {
+        if (listaMedico[i].codigo == codigo_entrada) {
             return &listaMedico[i];
         }
     }
     return NULL;
 }
-
-/**
-* */
 
 void lerMedico(struct medico listaMedico[], int contador_medico, struct especialidade listaEspecialidade[],
                int contador_especialidade, struct cidade listaCidade[], int contador_cidade) {
