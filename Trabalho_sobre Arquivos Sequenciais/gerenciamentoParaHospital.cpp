@@ -5,23 +5,23 @@
 
 using namespace std;
 
-/*Limpa o terminal*/
+/**Limpa o terminal*/
 void limparTela();
 
-/*Estrutura cidade*/
+/**Estrutura cidade*/
 struct cidade {
     int codigo;
     string nome;
     string UF;
 };
 
-/*Imprime no terminal uma estrutura cidade*/
+/**Imprime no terminal uma estrutura cidade*/
 void imprimirCidade(const struct cidade &cidade);
-/*Busca dentro de uma lista a cidade que corresponde ao codigo_buscado(codigo)*/
+/**Busca dentro de uma lista a cidade que corresponde ao codigo_buscado(codigo)*/
 cidade* buscarCidade(int codigo_buscado, struct cidade listaCidade[], int contador_cidade);
-/*Imprime uma lista de estruturas cidade sequencialmente*/
+/**Imprime uma lista de estruturas cidade sequencialmente*/
 void imprimirListaCidade(struct cidade listaCidade[], int contador_cidade);
-/*Realiza a leitura de uma cidade*/
+/**Realiza a leitura de uma cidade*/
 void lerCidade(struct cidade listaCidade[], int contador_cidade);
 
 // Estrutura especialidade
@@ -31,33 +31,33 @@ struct especialidade {
 
 };
 
-/*Imprime no terminal uma estrutura especialidade*/
+/**Imprime no terminal uma estrutura especialidade*/
 void imprimirEspecialidade(struct especialidade &especialidade);
-/*Busca dentro de uma lista a especialidade que corresponde ao codigo_entrada(codigo)*/
+/**Busca dentro de uma lista a especialidade que corresponde ao codigo_entrada(codigo)*/
 especialidade* buscarEspecialidade (int codigo_entrada, struct especialidade listaEspecialidade[], int
 contador_especialidade);
-/*Realiza a leitura de uma especialidade*/
+/**Realiza a leitura de uma especialidade*/
 void lerEspecialidade(struct especialidade listaEspecialidade[], int contador_especialidade);
-/*Imprime uma lista de estruturas especialidade sequencialmente*/
+/**Imprime uma lista de estruturas especialidade sequencialmente*/
 void imprimirListaEspecialidade(struct especialidade listaEspecialidade[], int contador_especialidade);
 
-/*Estrutura CID*/
+/**Estrutura CID*/
 struct CID {
     int codigo;
     string descricao;
 
 };
 
-/*Imprime no terminal uma estrutura CID*/
+/**Imprime no terminal uma estrutura CID*/
 void imprimirCID(const struct CID &cid);
-/*Imprime uma lista de estruturas CID sequencialmente*/
+/**Imprime uma lista de estruturas CID sequencialmente*/
 void imprimirListaCID(struct CID listaCID[], int contador_cid);
-/*Busca dentro de uma lista a CID que corresponde ao codigo_entrada(codigo)*/
+/**Busca dentro de uma lista a CID que corresponde ao codigo_entrada(codigo)*/
 CID* buscarCID(int codigo_entrada, struct CID listaCID[], int contador_cid);
-/*Realiza a leitura de uma CID*/
+/**Realiza a leitura de uma CID*/
 void lerCID(struct CID listaCID[], int contador_cid);
 
-/*Estrutura medicamento*/
+/**Estrutura medicamento*/
 struct medicamento {
     int codigo;
     string nome;
@@ -68,18 +68,17 @@ struct medicamento {
 
 };
 
-/*Imprime no terminal uma estrutura medicamento*/
+/**Imprime no terminal uma estrutura medicamento*/
 void imprimirMedicamento(const struct medicamento &medicamento);
-/*Imprime uma lista de estruturas medicamento sequencialmente*/
+/**Imprime uma lista de estruturas medicamento sequencialmente*/
 void imprimirListaMedicamento(struct medicamento listaMedicamento[], int contador_medicamento);
-/*Busca dentro de uma lista o medicamento que corresponde ao codigo_entrada(codigo)*/
+/**Busca dentro de uma lista o medicamento que corresponde ao codigo_entrada(codigo)*/
 medicamento* buscarMedicamento(int codigo_entrada, struct medicamento listaMedicamento[], int contador_medicamento);
-/*Realiza a leitura de um medicamento*/
+/**Realiza a leitura de um medicamento*/
 void lerMedicamento(struct medicamento listaMedicamento[], int contador_medicamento);
-/*Realiza a reducao dentro da estrutura medicamento seu quant em Estoque, reduzindo com base na (saida)*/
 void reduzirEstoque(struct medicamento* medicamento, int saida);
 
-/*Estrutura medico*/
+/**Estrutura medico*/
 struct medico {
     int codigo;
     string nome;
@@ -89,16 +88,16 @@ struct medico {
     cidade* codigoCidade;
 };
 
-/*Imprime no terminal uma estrutura medico*/
+/**Imprime no terminal uma estrutura medico*/
 void imprimirMedico(const struct medico& medico);
-/*Imprime uma lista de estruturas medico sequencialmente*/
+/**Imprime uma lista de estruturas medico sequencialmente*/
 void imprimirListaMedico(struct medico listaMedico[], int contador_medico);
-/*Busca dentro de uma lista o medico que corresponde ao codigo_entrada(codigo)*/
+/**Busca dentro de uma lista o medico que corresponde ao codigo_entrada(codigo)*/
 medico* buscarMedico(int codigo_entrada, struct medico listaMedico[], int contador_medico);
-/*Realiza a leitura de um medico*/
+/**Realiza a leitura de um medico*/
 void lerMedico(struct medico listaMedico[], int contador_medico, struct especialidade listaEspecialidade[], int contador_especialidade, struct cidade listaCidade[], int contador_cidade);
 
-/*Estrutura paciente*/
+/**Estrutura paciente*/
 struct paciente {
     string CPF;
     string nome;
@@ -106,18 +105,18 @@ struct paciente {
     cidade* codigoCidade;
 };
 
-/*Imprime no terminal uma estrutura paciente*/
+/**Imprime no terminal uma estrutura paciente*/
 void imprimirPaciente(const struct paciente &paciente);
-/*Imprime uma lista de estruturas paciente sequencialmente*/
+/**Imprime uma lista de estruturas paciente sequencialmente*/
 void imprimirListaPaciente(paciente listaPacientes[], int contador_paciente);
-/*Busca dentro de uma lista o paciente que corresponde ao codigo_entrada(CPF)*/
+/**Busca dentro de uma lista o paciente que corresponde ao codigo_entrada(CPF)*/
 paciente* buscarPaciente(string &codigo_entrada, struct paciente listaPaciente[], int contador_paciente);
-/*Realiza a leitura de um paciente*/
+/**Realiza a leitura de um paciente*/
 void lerPaciente(struct paciente listaPaciente[], int contador_paciente, struct cidade listaCidade[], int contador_cidade);
-/*Realiza a remocao de um registro de paciente*/
+/**Realiza a remocao de um registro de paciente*/
 void removerRegistroPaciente(struct paciente listaPaciente[], int *contador_paciente);
 
-/*Estrutura consulta*/
+/**Estrutura consulta*/
 struct consulta {
     paciente cpfPaciente;
     medico codMedico;
@@ -127,89 +126,89 @@ struct consulta {
     int qtdeMedicamento;
 };
 
-/*Imprime no terminal uma estrutura consulta*/
+/**Imprime no terminal uma estrutura consulta*/
 void imprimirConsulta(const struct consulta &consulta);
-/*Reliza a leitura de uma consulta*/
+/**Reliza a leitura de uma consulta*/
 void agendarConsulta(struct consulta *consulta, struct paciente listaPaciente[], int contador_paciente, struct medico listaMedico[],
     int contador_medico, struct CID listaCID[], int contador_cid, struct medicamento listaMedicamento[], int contador_medicamento);
 
 int main() {
-    /*Libera o uso de acentos da lingua pontuguesa no terminal*/
+    /**Libera o uso de acentos da lingua pontuguesa no terminal*/
     setlocale(LC_ALL, "portuguese");
 
-    /*atributo usado para confirmacao de cada processo*/
+    /**atributo usado para confirmacao de cada processo*/
     int confirmacao;
-    /*valida se o processo esta corretamente realizado*/
+    /**valida se o processo esta corretamente realizado*/
     bool validacao;
-    /*Valor base das consulta*/;
+    /**Valor base das consulta*/;
     float valorBaseConsulta = 100.0;
 
-    /*Configuracos da lista de cidade*/
+    /**Configuracos da lista de cidade*/
     int tamanho_cidade = 10;
     int contador_cidade = 3;
     cidade listaCidade[tamanho_cidade];
 
-    /*DADOS INJETADOS DE CIDADE*/
+    /**DADOS INJETADOS DE CIDADE*/
     listaCidade[0] = {1, "Assis", "SP"};
     listaCidade[1] = {2, "Candido Mota", "SP"};
     listaCidade[2] = {5, "Unai", "MG"};
 
-    /*Configuracos da lista de especialidade*/
+    /**Configuracos da lista de especialidade*/
     int tamanho_especialidade = 10;
     int contador_especialidade = 3;
     especialidade listaEspecialidade[tamanho_especialidade];
 
-    /*DADOS INJETADOS DE ESPECIALIDADE*/
+    /**DADOS INJETADOS DE ESPECIALIDADE*/
     listaEspecialidade[0] = {2, "Ortopedista"};
     listaEspecialidade[1] = {3, "Psiquiatra"};
     listaEspecialidade[2] = {5, "Neurologista"};
 
-    /*Configuracos da lista de cid*/
+    /**Configuracos da lista de cid*/
     int tamanho_cid = 10;
     int contador_cid = 3;
     CID listaCID[tamanho_cid];
 
-    /*DADOS INJETADOS DE CID*/
-    listaCID[0] = {1, "Infecção intestinal"};
+    /**DADOS INJETADOS DE CID*/
+    listaCID[0] = {1, "Infecï¿½ï¿½o intestinal"};
     listaCID[1] = {3, "Virus mortal"};
     listaCID[2] = {4, "Bacteria nociva"};
 
-    /*Configuracos da lista de medicamento*/
+    /**Configuracos da lista de medicamento*/
     int tamanho_medicamento = 10;
     int contador_medicamento = 3;
     medicamento listaMedicamento[tamanho_medicamento];
 
-    /*DADOS INJETADOS DE MEDICAMENTO*/
+    /**DADOS INJETADOS DE MEDICAMENTO*/
     listaMedicamento[0] = {2, "Tadalafila", 1, 4, 6, 2.5};
     listaMedicamento[1] = {3, "Paracetamol", 4, 5, 7, 5.9};
     listaMedicamento[2] = {4, "Neuzadina", 5, 3, 10, 10.2};
 
-    /*Configuracos da lista de medico*/
+    /**Configuracos da lista de medico*/
     int tamanho_medico = 10;
     int contador_medico = 3;
     medico listaMedico[tamanho_medico];
 
-    /*DADOS INJETADOS DE MEDICO*/
+    /**DADOS INJETADOS DE MEDICO*/
     listaMedico[0] = {1, "Robeto", &listaEspecialidade[0], "Augusta Melo, 535", "(18)9912-2123", &listaCidade[0]};
     listaMedico[1] = {3, "Alex", &listaEspecialidade[1], "Daniel Cruz, 991", "(18)9933-3323", &listaCidade[2]};
     listaMedico[2] = {4, "Rodrigo", &listaEspecialidade[0], "Jose Nogueira, 123", "(18)9001-0013", &listaCidade[2]};
 
-    /*Configuracos da lista de paciente*/
+    /**Configuracos da lista de paciente*/
     int tamanho_paciente = 10;
     int contador_paciente = 3;
     paciente listaPaciente[tamanho_paciente];
 
-    /*DADOS INJETADOS DE PACIENTE*/
+    /**DADOS INJETADOS DE PACIENTE*/
     listaPaciente[0] = {"123.123.123-10", "Danilo", "Obama Clintom,566", &listaCidade[1]};
     listaPaciente[1] = {"145.645.623-04", "Rogerio", "Mello de Ferro", &listaCidade[2]};
     listaPaciente[2] = {"150.003.432-22", "Nicolas", "Lincom Presidente", &listaCidade[0]};
 
-    /*Configuracos da lista de consulta*/
+    /**Configuracos da lista de consulta*/
     int tamanho_consulta = 10;
     int contador_consulta = 3;
     consulta listaConsulta[tamanho_consulta];
 
-    /*DADOS INJETOS DE CONSULTA*/
+    /**DADOS INJETOS DE CONSULTA*/
     listaConsulta[0] = {listaPaciente[0],listaMedico[2],"30/05/2024 14:01:31",listaCID[0],listaMedicamento[1],3};
     listaConsulta[1] = {listaPaciente[1],listaMedico[0],"30/05/2024 17:33:20",listaCID[2],listaMedicamento[2],4};
     listaConsulta[2] = {listaPaciente[1],listaMedico[1],"30/05/2024 18:53:10",listaCID[1],listaMedicamento[0],1};
@@ -233,7 +232,7 @@ int main() {
         cout << "\n11 - Arrecadacao de consulta";
         cout << "\n12 - Exibir total as listas";
 
-        cout << "\n\nDigite qual acão deseja fazer: ";
+        cout << "\n\nDigite qual acï¿½o deseja fazer: ";
         cin >> op;
         if (op == 0){
                 cout << "\nByeee!!!";
@@ -447,7 +446,7 @@ int main() {
     return 0;
 }
 
-/*Funcao para limpeza da tela do terminal
+/**Funcao para limpeza da tela do terminal
  *  Retorno:
  *      limpeza do terminal
  */
@@ -457,7 +456,7 @@ void limparTela(){
 
 //-------------------------CIDADE--------------------------------------
 
-/*Funcao ultilizada para imprimir as informacoes de uma estrutura cidade
+/**Funcao ultilizada para imprimir as informacoes de uma estrutura cidade
  *  Argumentos:
  *     &cidade(cidade) : endereco de memoria de uma estrutura do tipo cidade;
  *
@@ -470,7 +469,7 @@ void imprimirCidade(const struct cidade &cidade) {
         cout << "\nUF: \t\t" << cidade.UF;
 }
 
-/*Funcao utilizada para busca na lista de entrada(ListaCidade) interando pelo seu contador no processo de busca
+/**Funcao utilizada para busca na lista de entrada(ListaCidade) interando pelo seu contador no processo de busca
 binaria, onde na ocorrencia de uma registro com o mesmo valor atribuido(codigo_buscado) retorna o registro encontrado
 com os dados e informacoes do registro em metodo de ponteiro para que todos dados seja conectados por blocos de
 memoria apontados pelo sistema.
@@ -482,9 +481,9 @@ memoria apontados pelo sistema.
  *  Retorno:
  *      cidade* : um ponteiro para onde esta guardado o codigo == codigo_buscado.
  *
- *  Exceções:
+ *  Exceï¿½ï¿½es:
  *      NULL : caso o codigo_buscado nao encontre dentro da listaCidade, ele retorna um ponteiro para NULL, que e
- usado como validador da existencia do codigo ou não
+ usado como validador da existencia do codigo ou nï¿½o
  */
 cidade* buscarCidade(int codigo_buscado, struct cidade listaCidade[], int contador_cidade) {
     int min = 0;
@@ -503,7 +502,7 @@ cidade* buscarCidade(int codigo_buscado, struct cidade listaCidade[], int contad
     return NULL;
 }
 
-/*Funcao para impressao de uma lista(listaCidade) - ultilizando impressao linear com o uso da funcao imprimirCidade()
+/**Funcao para impressao de uma lista(listaCidade) - ultilizando impressao linear com o uso da funcao imprimirCidade()
  *  Argumentos:
  *     listaCidade(cidade) : lista onde estao armazenada as cidade registradas pelo usuario
  *     contador_cidade(int) : determina a quantidade de registro na lista
@@ -519,7 +518,7 @@ void imprimirListaCidade(struct cidade listaCidade[], int contador_cidade) {
     }
 }
 
-/*Funcao para leitura da informacoes de uma cidade(struct cidade), armazenadas dentro de uma lista de valores da
+/**Funcao para leitura da informacoes de uma cidade(struct cidade), armazenadas dentro de uma lista de valores da
 lista(listaCidade), no indice(contador)
  * Argumentos:
  *     listaCidade(cidade) : lista onde estao armazenada as cidade registradas pelo usuario
@@ -560,7 +559,7 @@ void lerCidade(struct cidade listaCidade[], int contador_cidade) {
 
 // ------------------------------------- ESPECIALIDADE -----------------------------------------------
 
-/*Funcao ultilizada para imprimir as informacoes de uma estrutura especialidade
+/**Funcao ultilizada para imprimir as informacoes de uma estrutura especialidade
  *  Argumentos:
  *     &especialidade(especialidade) : endereco de memoria de uma estrutura do tipo especialidade
  *
@@ -572,7 +571,7 @@ void imprimirEspecialidade(struct especialidade &especialidade){
         cout << "\nDescricao: \t" << especialidade.descricao;
 }
 
-/*Funcao utilizada para busca na lista de entrada(ListaEspecialidade) interando pelo seu contador no processo de busca
+/**Funcao utilizada para busca na lista de entrada(ListaEspecialidade) interando pelo seu contador no processo de busca
 linear, onde na ocorrencia de uma registro com o mesmo valor atribuido(codigo_buscado) retorna o registro encontrado
 com os dados e informacoes do registro em metodo de ponteiro para que todos dados seja conectados por blocos de
 memoria apontados pelo sistema.
@@ -584,9 +583,9 @@ memoria apontados pelo sistema.
  *  Retorno:
  *      especialidade* : um ponteiro para onde esta guardado o codigo == codigo_buscado.
  *
- *  Exceções:
+ *  Exceï¿½ï¿½es:
  *      NULL : caso o codigo_buscado nao encontre dentro da listaEspecialidade, ele retorna um ponteiro para NULL, que e
- usado como validador da existencia do codigo ou não
+ usado como validador da existencia do codigo ou nï¿½o
  */
 especialidade* buscarEspecialidade (int codigo_entrada, struct especialidade listaEspecialidade[], int contador_especialidade) {
     for (int i = contador_especialidade - 1; i > -1; i--) {
@@ -597,7 +596,7 @@ especialidade* buscarEspecialidade (int codigo_entrada, struct especialidade lis
     return NULL;
 };
 
-/*Funcao para leitura da informacoes de uma especialidade(struct especialidade), armazenadas dentro de uma lista de valores da
+/**Funcao para leitura da informacoes de uma especialidade(struct especialidade), armazenadas dentro de uma lista de valores da
 lista(listaEspecialidade), no indice(contador_especialidade)
  * Argumentos:
  *     listaEspecialidade(especialidade) : lista onde estao armazenada as especialidades registradas pelo usuario
@@ -606,7 +605,7 @@ lista(listaEspecialidade), no indice(contador_especialidade)
  * Retorno:
  *     O registro da especialidade armazenado na lista no indice do contador(listaEspecialidade[contador_especialidade])
  *
- * Exceçoes:
+ * Exceï¿½oes:
  *     A existencia de um codigo ja registrado na lista igual ao codigo do novo registro
  */
 void lerEspecialidade(struct especialidade listaEspecialidade[], int contador_especialidade) {
@@ -632,7 +631,7 @@ void lerEspecialidade(struct especialidade listaEspecialidade[], int contador_es
         fflush(stdin);
 }
 
-/*Funcao para impressao de uma lista(listaEspecialidade) - ultilizando impressao linear com o uso da funcao
+/**Funcao para impressao de uma lista(listaEspecialidade) - ultilizando impressao linear com o uso da funcao
 imprimirEspecialidade()
  *  Argumentos:
  *     listaEspecialidade(especialidade) : lista onde estao armazenada as especialidade registradas pelo usuario
@@ -651,7 +650,7 @@ void imprimirListaEspecialidade(struct especialidade listaEspecialidade[], int c
 
 //-----------------------------------CID-----------------------------------------
 
-/*Funcao ultilizada para imprimir as informacoes de uma estrutura especialidade
+/**Funcao ultilizada para imprimir as informacoes de uma estrutura especialidade
  *  Argumentos:
  *     &especialidade(especialidade) : endereco de memoria de uma estrutura do tipo especialidade
  *
@@ -663,7 +662,7 @@ void imprimirCID(const struct CID &cid) {
         cout << "\nDescricao: \t" << cid.descricao;
 }
 
-/*Funcao para impressao de uma lista(listaCID) - ultilizando impressao linear com o uso da funcao
+/**Funcao para impressao de uma lista(listaCID) - ultilizando impressao linear com o uso da funcao
 imprimirCID()
  *  Argumentos:
  *     listaCID(CID) : lista onde estao armazenada as CID registradas pelo usuario
@@ -680,7 +679,7 @@ void imprimirListaCID(struct CID listaCID[], int contador_cid) {
     }
 }
 
-/*Funcao utilizada para busca na lista de entrada(ListaCID) interando pelo seu contador no processo de busca
+/**Funcao utilizada para busca na lista de entrada(ListaCID) interando pelo seu contador no processo de busca
 linear, onde na ocorrencia de uma registro com o mesmo valor atribuido(codigo_entrada) retorna o registro encontrado
 com os dados e informacoes do registro em metodo de ponteiro para que todos dados seja conectados por blocos de
 memoria apontados pelo sistema.
@@ -692,9 +691,9 @@ memoria apontados pelo sistema.
  *  Retorno:
  *      CID* : um ponteiro para onde esta guardado o codigo == codigo_entrada.
  *
- *  Exceções:
+ *  Exceï¿½ï¿½es:
  *      NULL : caso o codigo_entrada nao encontre dentro da listaCID, ele retorna um ponteiro para NULL, que e
- usado como validador da existencia do codigo ou não
+ usado como validador da existencia do codigo ou nï¿½o
  */
 CID* buscarCID(int codigo_entrada, struct CID listaCID[], int contador_cid) {
     for (int i = 0; i < contador_cid; i++) {
@@ -705,7 +704,7 @@ CID* buscarCID(int codigo_entrada, struct CID listaCID[], int contador_cid) {
     return NULL;
 }
 
-/*Funcao para leitura da informacoes de uma CID(struct CID), armazenadas dentro de uma lista de valores da
+/**Funcao para leitura da informacoes de uma CID(struct CID), armazenadas dentro de uma lista de valores da
 lista(listaCID), no indice(contador_cid)
  * Argumentos:
  *     listaCID(CID) : lista onde estao armazenada as CID registradas pelo usuario
@@ -726,7 +725,7 @@ void lerCID(struct CID listaCID[], int contador_cid) {
 
 //---------------------------------MEDICAMENTO------------------------------------------
 
-/*Funcao ultilizada para imprimir as informacoes de uma estrutura medicamento
+/**Funcao ultilizada para imprimir as informacoes de uma estrutura medicamento
  *  Argumentos:
  *     &medicamento(medicamento) : endereco de memoria de uma estrutura do tipo medicamento
  *
@@ -743,7 +742,7 @@ void imprimirMedicamento(const struct medicamento &medicamento) {
     cout << "\nPreco Unitario: \t" << medicamento.precoUnitario;
 }
 
-/*Funcao para impressao de uma lista(listaMedicamento) - ultilizando impressao linear com o uso da funcao
+/**Funcao para impressao de uma lista(listaMedicamento) - ultilizando impressao linear com o uso da funcao
 imprimirMedicamento()
  *  Argumentos:
  *     listaMedicamento(medicamento) : lista onde estao armazenada os medicamento registradas pelo usuario
@@ -760,7 +759,7 @@ void imprimirListaMedicamento(struct medicamento listaMedicamento[], int contado
     }
 }
 
-/*Funcao utilizada para busca na lista de entrada(ListaMedicamento) interando pelo seu contador no processo de busca
+/**Funcao utilizada para busca na lista de entrada(ListaMedicamento) interando pelo seu contador no processo de busca
 linear, onde na ocorrencia de uma registro com o mesmo valor atribuido(codigo_entrada) retorna o registro encontrado
 com os dados e informacoes do registro em metodo de ponteiro para que todos dados seja conectados por blocos de
 memoria apontados pelo sistema.
@@ -772,9 +771,9 @@ memoria apontados pelo sistema.
  *  Retorno:
  *      medicamento* : um ponteiro para onde esta guardado o codigo == codigo_entrada.
  *
- *  Exceções:
+ *  Exceï¿½ï¿½es:
  *      NULL : caso o codigo_entrada nao encontre dentro da listaMedicamento, ele retorna um ponteiro para NULL, que e
- usado como validador da existencia do codigo ou não
+ usado como validador da existencia do codigo ou nï¿½o
  */
 medicamento* buscarMedicamento(int codigo_entrada, struct medicamento listaMedicamento[], int contador_medicamento) {
     for(int i=0; i<contador_medicamento; i++) {
@@ -785,7 +784,7 @@ medicamento* buscarMedicamento(int codigo_entrada, struct medicamento listaMedic
     return NULL;
 }
 
-/*Funcao para leitura da informacoes de um medicamento(struct Medicamento), armazenadas dentro de uma lista de valores da
+/**Funcao para leitura da informacoes de um medicamento(struct Medicamento), armazenadas dentro de uma lista de valores da
 lista(listaMedicamento), no indice(contador_medicamento)
  * Argumentos:
  *     listaMedicamento(medicamento) : lista onde estao armazenada os medicamento registradas pelo usuario
@@ -832,13 +831,33 @@ void lerMedicamento(struct medicamento listaMedicamento[], int contador_medicame
     } while (listaMedicamento[contador_medicamento].precoUnitario < 0);
 }
 
-/*Funcao */
+
+/**
+ * Funcao responsavel pela reducao da quantidade de um medicamento indicado pela entrado sendo ele subtraido o
+* atributo quantEstoque do medicamento apontado na funcao, pelo valor da saida que sera reduzido do medicamento
+*
+* Atributos:
+*   *medicamento (medicamento) : ponteiro do medicamento que sera reduzido
+*   saida(int) : valor que sera subtraido do medicamento
+*
+* Retorno:
+*   Subtracao do medicamento->quantEstoque a saida
+*
+*/
 void reduzirEstoque(struct medicamento* medicamento, int saida) {
     medicamento->quantEstoque -= saida;
 }
 
 //-----------------------------------MEDICO-------------------------------------
 
+/** Funcao ultilizada para imprimir as informacoes de uma estrutura medico
+ *  Argumentos:
+ *     &medico(medico) : endereco de memoria de uma estrutura do tipo medico
+ *
+ *  Retorno:
+ *     impressao no terminal de suas informacoes dentro de medico como (codigo, nome, endereco, telefone)
+ *     e para os tipos de dados vinculados ele chama a funcao de impressao para cada tipo
+ */
 void imprimirMedico(const struct medico& medico) {
     cout << "\nMedico: \t" << medico.codigo;
     cout << "\nNome: \t\t" << medico.nome;
@@ -848,6 +867,14 @@ void imprimirMedico(const struct medico& medico) {
     imprimirCidade(*medico.codigoCidade);
 }
 
+/** FunÃ§Ã£o para impressÃ£o de uma lista (ListaMedico) - utilizando o sistema linear com o uso da funÃ§Ã£o
+* imprimirListaMedico
+*  Argumentos:
+*   listaMedico(medico): lista onde estÃ£o armazaneados os medicos registrados como usuÃ¡rio.
+*   contador_medico(int): determina a quantidade de lista
+*  Retorno:
+*   Chamada da funÃ§Ã£o imprimirMedico();
+*/
 void imprimirListaMedico(struct medico listaMedico[], int contador_medico) {
     limparTela();
     for (int i = 0; i < contador_medico; i++) {
@@ -856,14 +883,32 @@ void imprimirListaMedico(struct medico listaMedico[], int contador_medico) {
     }
 }
 
+/**
+* FunÃ§Ã£o utiliza a busca na lista de entrada (listaMedico) interando pelo seu contador no processo de busca linear,
+ onde na ocorrrencia de um registro com o mesmo valor atribuido (codigo_entrada) retorna o registro encontrado com os
+  dados e informaÃ§Ãµes do registro em metodo de ponteiro(*medico) para que os dados seja conectados por blocos de
+  memoria pelo sistema.
+ *
+ *Argumentos:
+ *  codigo_entrada(int): a entrada fornecida pelo usuario
+ *  ListaMedico(medico): e lista ao qual sera buscada o codigo
+ *  contador_medico(int): determina quantos eletementos pertences a lista
+ *Retorno:
+ *  *medico: um ponteiro para onde esta guardado a informaÃ§Ãµes
+ * ExcessÃµes:
+ *  NULL: caso o codigo_entrada nÃ£o encontrado dentro do ListaMedico, serÃ¡ retornado para o inicio da funÃ§Ã£o.
+*/
 medico* buscarMedico(int codigo_entrada, struct medico listaMedico[], int contador_medico) {
     for (int i = 0; i < contador_medico; i++) {
-        if (codigo_entrada == listaMedico[i].codigo) {
+        if (listaMedico[i].codigo == codigo_entrado) {
             return &listaMedico[i];
         }
     }
     return NULL;
 }
+
+/**
+* */
 
 void lerMedico(struct medico listaMedico[], int contador_medico, struct especialidade listaEspecialidade[],
                int contador_especialidade, struct cidade listaCidade[], int contador_cidade) {
@@ -937,6 +982,7 @@ void lerMedico(struct medico listaMedico[], int contador_medico, struct especial
 }
 
 //-------------------------------PACIENTE-----------------------------------
+
 void imprimirPaciente(const struct paciente &paciente) {
     cout << "\nPaciente: \t" << paciente.CPF;
     cout << "\nNome: \t\t" << paciente.nome;
@@ -1031,7 +1077,7 @@ void removerRegistroPaciente(struct paciente listaPaciente[], int *contador_paci
             do {
                 limparTela();
                 imprimirListaPaciente(listaPaciente, *contador_paciente);
-                cout << "\n\nQual registro deseja remover: (-1 Cancelar remoção) ";
+                cout << "\n\nQual registro deseja remover: (-1 Cancelar remoï¿½ï¿½o) ";
                 cin >> codigo_remocao;
                 if (codigo_remocao >= *contador_paciente || codigo_remocao < -1) {
                     cout << "Codigo de remocao nao pertece a lista, :C";
