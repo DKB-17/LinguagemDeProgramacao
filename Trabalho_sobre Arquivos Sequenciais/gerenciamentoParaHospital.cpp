@@ -2,6 +2,7 @@
 #include <iostream>
 #include <conio.h>
 #include <iomanip>
+#include <clocale>
 
 using namespace std;
 
@@ -134,6 +135,7 @@ void agendarConsulta(struct consulta *consulta, struct paciente listaPaciente[],
     int contador_medico, struct CID listaCID[], int contador_cid, struct medicamento listaMedicamento[], int contador_medicamento);
 
 int main() {
+
     /**Libera o uso de acentos da lingua pontuguesa no terminal*/
     setlocale(LC_ALL, "portuguese");
 
@@ -234,7 +236,7 @@ int main() {
         cout << "\n12 - Exibir total as listas";
         cout << "\n13 - Adicionar estoque de medicamento";
 
-        cout << "\n\nDigite qual acão deseja fazer: ";
+        cout << "\n\nDigite qual acao deseja fazer: ";
         cin >> op;
         if (op == 0){
                 cout << "\nByeee!!!";
