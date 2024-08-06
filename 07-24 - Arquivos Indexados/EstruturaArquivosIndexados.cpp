@@ -65,8 +65,22 @@ void buscaBinaria(struct indice idx[], struct cliente cli[], int contador, int c
     getch();
 }
 
-void leitura_dados(struct cliente cliente[],int contador) {
-    cout << "Leitura do cliente: ";
+
+void add_indice(struct indice ind[], int contador, struct cliente lsd[]){
+    if(contador != 0) {
+        int i;
+        for(i=contador; ind[i-1].codigo > lsd[contador].codigo && i>0 ;i--) {
+                ind[i] = ind[i-1];
+            }
+        ind[i].codigo = lsd[contador].codigo;
+        ind[i].ender = contador;
+    }else {
+        ind[contador].codigo = lsd[contador].codigo;
+        ind[contador].ender = contador;
+    }
+}
+
+void leitura_dados(struct cliente cliente[],int contador, struct indice ind[]) {
     cout << "\nCodigo:";
     cin >> cliente[contador].codigo;
     cout << "Nome:";
@@ -79,7 +93,7 @@ void leitura_dados(struct cliente cliente[],int contador) {
     fflush(stdin);
     cout << "Uf:";
     gets(cliente[contador].uf);
-
+    add_indice(ind, contador,cliente);
 }
 void leitura_indice(struct indice ind[], int contador) {
     cout << "Leitura ind:";
@@ -89,56 +103,66 @@ void leitura_indice(struct indice ind[], int contador) {
     cin >> ind[contador].ender;
 }
 
-void ordenar_lista(struct indice ind[], int tamanho) {
-    indice aux;
-    for(int i = 0; i < tamanho;i++) {
-        for(int j = i + 1; j < tamanho; j++) {
-            if(ind[i].codigo > ind[j].codigo) {
-                aux = ind[i];
-                ind[i] = ind[j];
-                ind[j] = aux;
-            }
-        }
-    }
-}
+void imprimir_listas(struct cliente dados[], struct indice ind[], int contador) {
 
-void add_indice(struct indice ind[], int contador, struct cliente lsd[]){
-    ind[contador].codigo = lsd[contador].codigo;
-    ind[contador].ender = contador;
-}
-
-int main() {
-
-    struct indice ind[20];
-    struct cliente dados[20];
-    int contador = 0;
-    int sair = 1;
-
-    while(sair != 0) {
-        for(int i=0;i<ler;i++) {
-            system("cls");
-            leitura_dados(dados, contador);
-            add_indice(ind,contador,dados);
-            contador ++;
-            ordenar_lista(ind, contador);
-        }
-    }
     for(int i=0; i < contador; i++) {
         cout << "\n";
         ind[i].imprimir();
         cout << "\t";
         dados[i].imprimir();
     }
-
-    int codigobuscado;
-    cout << "\nDigite o codigo buscado: ";
-    cin >> codigobuscado;
-    buscaSerial(ind,dados,contador, codigobuscado);
+}
 
 
-    cout << "\nDigite o codigo buscado: ";
-    cin >> codigobuscado;
-    buscaBinaria(ind,dados,contador, codigobuscado);
+int main() {
+    int tamanho = 20;
+    struct indice ind[tamanho];
+    struct cliente dados[tamanho];
+    int contador = 0;
+    int op = 1;
 
+    while(op != 0) {
+
+        system("cls");
+        cout << "\n Opcoes do sistema";
+        cout << "\n 0 - Sair";
+        cout << "\n 1 - Ler novo cliente";
+        cout << "\n 2 - Exibir listas";
+        cout << "\n 3 - Busca Serial";
+        cout << "\n 4 - Busca Binaria";
+
+        cout << "\n\nInsira um numero: ";
+        cin >> op;
+
+        int codigobuscado;
+        if(op == 0) {
+            system("cls");
+            cout << "\n Tchau :)";
+        }else if(op == 1) {
+            if(contador < tamanho) {
+                cout << "\nLeitura de cliente:";
+                leitura_dados(dados, contador, ind);
+                contador++;
+            }else {
+                cout << "\nLista cheia";
+            }
+            getch();
+        }else if(op == 2) {
+            imprimir_listas(dados, ind, contador);
+            getch();
+        }else if(op == 3) {
+            cout << "\nDigite o codigo buscado: ";
+            cin >> codigobuscado;
+            buscaSerial(ind,dados,contador, codigobuscado);
+            getch();
+        }else if(op == 4) {
+            cout << "\nDigite o codigo buscado: ";
+            cin >> codigobuscado;
+            buscaBinaria(ind,dados,contador, codigobuscado);
+            getch();
+        }else {
+            cout << "\nEsta opcao nao existe, tente outra :(";
+        }
+    }
 }
 
