@@ -17,16 +17,19 @@ struct cliente {
     string endereco;
     string cidade;
     char uf[2];
+    bool status;
 
     void imprimir() const {
-        cout << codigo << "|" << nome << "|" << endereco << "|" << cidade << "|" << uf;
+        if(!status) {
+            cout << codigo << "|" << nome << "|" << endereco << "|" << cidade << "|" << uf << "|" << status;
+        }
     }
 };
 
 void buscaSerial(struct indice idx[], struct cliente cli[], int cont, int cod) {
     int i = 0;
     for(;i < cont && cod > idx[i].codigo; i++);
-    if(cod == idx[i].codigo) {
+    if(cod == idx[i].codigo && cli[i].status == false) {
         cout << "\n\nCliente Encontrado";
         i = idx[i].ender;
         cout << "\nCodigo do Cliente:" << cli[i].codigo;
@@ -39,7 +42,7 @@ void buscaSerial(struct indice idx[], struct cliente cli[], int cont, int cod) {
     }
     getch();
 }
-void buscaBinaria(struct indice idx[], struct cliente cli[], int contador, int cod) {
+int buscaBinaria(struct indice idx[], struct cliente cli[], int contador, int cod) {
 
     int i = 0;
     int f = contador-1;
@@ -51,7 +54,7 @@ void buscaBinaria(struct indice idx[], struct cliente cli[], int contador, int c
             i = meio + 1;
         }
     }
-    if(idx[meio].codigo == cod) {
+    if(idx[meio].codigo == cod && cli[meio].status == false) {
         cout << "\n\nCliente Encontrado";
         i = idx[meio].ender;
         cout << "\nCodigo do Cliente:" << cli[i].codigo;
@@ -59,10 +62,12 @@ void buscaBinaria(struct indice idx[], struct cliente cli[], int contador, int c
         cout << "\nEndereco:" << cli[i].endereco;
         cout << "\nCidade:" << cli[i].cidade;
         cout << "\nUf:" << cli[i].uf;
+        return i;
     }else {
         cout << "\n\n Cliente nao encontrado";
+        getch();
     }
-    getch();
+    return -1;
 }
 
 
@@ -93,6 +98,7 @@ void leitura_dados(struct cliente cliente[],int contador, struct indice ind[]) {
     fflush(stdin);
     cout << "Uf:";
     gets(cliente[contador].uf);
+    cliente[contador].status = false;
     add_indice(ind, contador,cliente);
 }
 void leitura_indice(struct indice ind[], int contador) {
@@ -113,13 +119,41 @@ void imprimir_listas(struct cliente dados[], struct indice ind[], int contador) 
     }
 }
 
+void exclusão_Registro(struct cliente dados[], struct indice ind[], int contador, int cod) {
+    int pos = buscaBinaria(ind, dados, contador,cod);
+    if(pos != -1) {
+        dados[pos].imprimir();
+        dados[pos].status = true;
+        getch();
+    }
+}
 
 int main() {
     int tamanho = 20;
     struct indice ind[tamanho];
     struct cliente dados[tamanho];
-    int contador = 0;
+    int contador = 9;
     int op = 1;
+
+    ind[0] = {1,5};
+    ind[1] = {2,2};
+    ind[2] = {4,8};
+    ind[3] = {6,4};
+    ind[4] = {7,6};
+    ind[5] = {8,0};
+    ind[6] = {11,3};
+    ind[7] = {12,7};
+    ind[8] = {14,1};
+
+    dados[0] = {8,"Jose","Rua F,90", "Candido Mota", {'S','P'}, 0};
+    dados[1] = {14,"Carina","Rua F,25", "Assis", {'S','P'}, 0};
+    dados[2] = {2,"Maria","Rua K,67", "Marilia", {'S','P'}, 1};
+    dados[3] = {11,"Silvia","Rua B,203", "Assis", {'S','P'}, 0};
+    dados[4] = {6,"Pedro","Rua J,38", "Assis", {'S','P'}, 0};
+    dados[5] = {1,"Joao","Rua A,45", "Assis", {'S','P'}, 1};
+    dados[6] = {7,"Cristina","Rua K,67", "Palmital", {'S','P'}, 0};
+    dados[7] = {12,"Manoel","Rua K,45", "Londrina", {'P','R'}, 1};
+    dados[8] = {4,"Antonio","Rua B,203", "Assis", {'S','P'}, 0};
 
     while(op != 0) {
 
@@ -130,11 +164,13 @@ int main() {
         cout << "\n 2 - Exibir listas";
         cout << "\n 3 - Busca Serial";
         cout << "\n 4 - Busca Binaria";
+        cout << "\n 5 - Exclusao de Registros";
 
         cout << "\n\nInsira um numero: ";
         cin >> op;
 
         int codigobuscado;
+        int codigoexclusao;
         if(op == 0) {
             system("cls");
             cout << "\n Tchau :)";
@@ -160,6 +196,11 @@ int main() {
             cin >> codigobuscado;
             buscaBinaria(ind,dados,contador, codigobuscado);
             getch();
+        }else if(op == 5) {
+            imprimir_listas(dados, ind, contador);
+            cout << "\nDigite o cod que deseja excluir:";
+            cin >> codigoexclusao;
+            exclusão_Registro(dados, ind, contador, codigoexclusao);
         }else {
             cout << "\nEsta opcao nao existe, tente outra :(";
         }
