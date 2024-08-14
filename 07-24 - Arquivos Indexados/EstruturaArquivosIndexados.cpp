@@ -3,25 +3,28 @@
 
 using namespace std;
 
-struct indice {
-    int codigo;
-    int ender;
-
-    void imprimir() const {
-        cout << codigo << "|" << ender;
-    }
-};
 struct cliente {
     int codigo;
     string nome;
     string endereco;
     string cidade;
-    char uf[2];
-    bool status;
+    string uf;
+    int status;
 
     void imprimir() const {
         if(!status) {
             cout << codigo << "|" << nome << "|" << endereco << "|" << cidade << "|" << uf << "|" << status;
+        }
+    }
+};
+
+struct indice {
+    int codigo;
+    int ender;
+
+    void imprimir(struct cliente& cli) const {
+        if(!cli.status) {
+            cout << codigo << "|" << ender;
         }
     }
 };
@@ -86,8 +89,10 @@ void add_indice(struct indice ind[], int contador, struct cliente lsd[]){
 }
 
 void leitura_dados(struct cliente cliente[],int contador, struct indice ind[]) {
+
     cout << "\nCodigo:";
     cin >> cliente[contador].codigo;
+
     cout << "Nome:";
     fflush(stdin);
     getline(cin,cliente[contador].nome);
@@ -95,10 +100,12 @@ void leitura_dados(struct cliente cliente[],int contador, struct indice ind[]) {
     getline(cin,cliente[contador].endereco);
     cout << "Cidade:";
     getline(cin,cliente[contador].cidade);
+    do {
+        cout << "Uf:";
+        getline(cin,cliente[contador].uf);
+    }while(cliente[contador].uf.length() > 2);
     fflush(stdin);
-    cout << "Uf:";
-    gets(cliente[contador].uf);
-    cliente[contador].status = false;
+    cliente[contador].status = 0;
     add_indice(ind, contador,cliente);
 }
 void leitura_indice(struct indice ind[], int contador) {
@@ -113,7 +120,7 @@ void imprimir_listas(struct cliente dados[], struct indice ind[], int contador) 
 
     for(int i=0; i < contador; i++) {
         cout << "\n";
-        ind[i].imprimir();
+        ind[i].imprimir(dados[ind[i].ender]);
         cout << "\t";
         dados[i].imprimir();
     }
@@ -122,9 +129,17 @@ void imprimir_listas(struct cliente dados[], struct indice ind[], int contador) 
 void exclusão_Registro(struct cliente dados[], struct indice ind[], int contador, int cod) {
     int pos = buscaBinaria(ind, dados, contador,cod);
     if(pos != -1) {
-        dados[pos].imprimir();
         dados[pos].status = true;
         getch();
+    }
+}
+
+void leitura_Exaustiva(struct indice ind[], struct cliente dados[], int contador) {
+    for(int k = 0;k<contador;k++) {
+        int i = ind[k].ender;
+        if(dados[i].status != 1) {
+            dados[i].imprimir();
+        }
     }
 }
 
@@ -145,15 +160,15 @@ int main() {
     ind[7] = {12,7};
     ind[8] = {14,1};
 
-    dados[0] = {8,"Jose","Rua F,90", "Candido Mota", {'S','P'}, 0};
-    dados[1] = {14,"Carina","Rua F,25", "Assis", {'S','P'}, 0};
-    dados[2] = {2,"Maria","Rua K,67", "Marilia", {'S','P'}, 1};
-    dados[3] = {11,"Silvia","Rua B,203", "Assis", {'S','P'}, 0};
-    dados[4] = {6,"Pedro","Rua J,38", "Assis", {'S','P'}, 0};
-    dados[5] = {1,"Joao","Rua A,45", "Assis", {'S','P'}, 1};
-    dados[6] = {7,"Cristina","Rua K,67", "Palmital", {'S','P'}, 0};
-    dados[7] = {12,"Manoel","Rua K,45", "Londrina", {'P','R'}, 1};
-    dados[8] = {4,"Antonio","Rua B,203", "Assis", {'S','P'}, 0};
+    dados[0] = {8,"Jose","Rua F,90", "Candido Mota", "SP", 0};
+    dados[1] = {14,"Carina","Rua F,25", "Assis", "SP", 0};
+    dados[2] = {2,"Maria","Rua K,67", "Marilia", "SP", 1};
+    dados[3] = {11,"Silvia","Rua B,203", "Assis", "SP", 0};
+    dados[4] = {6,"Pedro","Rua J,38", "Assis", "SP", 0};
+    dados[5] = {1,"Joao","Rua A,45", "Assis", "SP", 1};
+    dados[6] = {7,"Cristina","Rua K,67", "Palmital", "SP", 0};
+    dados[7] = {12,"Manoel","Rua K,45", "Londrina", "PR", 1};
+    dados[8] = {4,"Antonio","Rua B,203", "Assis", "SP", 0};
 
     while(op != 0) {
 
