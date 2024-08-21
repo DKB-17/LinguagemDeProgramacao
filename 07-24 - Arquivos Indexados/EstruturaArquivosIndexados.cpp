@@ -143,6 +143,29 @@ void leitura_Exaustiva(struct indice ind[], struct cliente dados[], int contador
     }
 }
 
+void reorganiza_lista(struct indice ind[], struct cliente dados[], int *contador, int tamanho) {
+    int contadorExtInd = 0;
+    int contadorExtDados = 0;
+    struct cliente dados2[tamanho];
+    struct indice ind2[tamanho];
+    for(int i = 0; i < *contador; i++) {
+        if(dados[ind[i].ender].status != 1) {
+            ind2[contadorExtInd] = ind[i];
+            contadorExtInd ++;
+        }
+        if(dados[i].status != 1) {
+            dados2[contadorExtDados] = dados[i];
+            contadorExtDados ++;
+        }
+    }
+    for(int i=0;i<contadorExtInd;i++) {
+        ind[i] = ind2[i];
+        dados[i] = dados2[i];
+    }
+    *contador = contadorExtInd;
+
+}
+
 int main() {
     int tamanho = 20;
     struct indice ind[tamanho];
@@ -180,6 +203,7 @@ int main() {
         cout << "\n 3 - Busca Serial";
         cout << "\n 4 - Busca Binaria";
         cout << "\n 5 - Exclusao de Registros";
+        cout << "\n 6 - Reorganizacao do Arquivo";
 
         cout << "\n\nInsira um numero: ";
         cin >> op;
@@ -216,6 +240,10 @@ int main() {
             cout << "\nDigite o cod que deseja excluir:";
             cin >> codigoexclusao;
             exclusão_Registro(dados, ind, contador, codigoexclusao);
+        }else if(op == 6) {
+            reorganiza_lista(ind, dados, &contador, tamanho);
+            imprimir_listas(dados, ind, contador);
+            getch();
         }else {
             cout << "\nEsta opcao nao existe, tente outra :(";
         }
