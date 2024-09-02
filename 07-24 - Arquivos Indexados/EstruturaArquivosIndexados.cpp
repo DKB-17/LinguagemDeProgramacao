@@ -143,28 +143,36 @@ void leitura_Exaustiva(struct indice ind[], struct cliente dados[], int contador
     }
 }
 
-void reorganiza_lista(struct indice ind[], struct cliente dados[], int *contador, int tamanho) {
-    int contadorExtInd = 0;
-    int contadorExtDados = 0;
-    struct cliente dados2[tamanho];
-    struct indice ind2[tamanho];
-    for(int i = 0; i < *contador; i++) {
-        if(dados[ind[i].ender].status != 1) {
-            ind2[contadorExtInd] = ind[i];
-            contadorExtInd ++;
-        }
-        if(dados[i].status != 1) {
-            dados2[contadorExtDados] = dados[i];
-            contadorExtDados ++;
-        }
-    }
-    for(int i=0;i<contadorExtInd;i++) {
-        ind[i] = ind2[i];
-        dados[i] = dados2[i];
-    }
-    *contador = contadorExtInd;
+void reorganiza_lista(struct indice ind[], struct cliente dados[], int &contador) {
+    //
+    // struct cliente novocli[contador];
+    // int j=-1;
+    // for(int k=0;k<contador;k++) {
+    //     int i=ind[k].ender;
+    //     if(dados[i].status == 0) {
+    //         j++;
+    //         novocli[j] = dados[i];
+    //         ind[j].codigo = novocli[j].codigo;
+    //         ind[j].ender = j;
+    //     }
+    // }
+    // contador = j+1;
+    // for(int k=0;k<contador;k++) {
+    //     int i = ind[k].ender;
+    //     dados[k] = novocli[i];
+    // }
 
+    int contadorInd = 0;
+    for(int i=0; i<contador;i++) {
+        if(dados[ind[i].ender].status == 0) {
+            dados[ind[contadorInd].ender] = dados[ind[i].ender];
+            ind[contadorInd].codigo = ind[i].codigo;
+            contadorInd++;
+        }
+    }
+    contador = contadorInd;
 }
+
 
 int main() {
     int tamanho = 20;
@@ -241,7 +249,9 @@ int main() {
             cin >> codigoexclusao;
             exclusão_Registro(dados, ind, contador, codigoexclusao);
         }else if(op == 6) {
-            reorganiza_lista(ind, dados, &contador, tamanho);
+            imprimir_listas(dados, ind, contador);
+            cout << "\n";
+            reorganiza_lista(ind, dados, contador);
             imprimir_listas(dados, ind, contador);
             getch();
         }else {
