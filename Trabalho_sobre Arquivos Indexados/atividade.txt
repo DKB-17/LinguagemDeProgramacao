@@ -25,7 +25,6 @@ Vendas: código_venda, código_cliente, código_pacote, quantidade_pessoas, valo
 2.2) Quando o usuário digitar o código da cidade, o programa deverá buscar este código na tabela de Cidades e exibir o nome da cidade e UF e o nome do País.
 
 
-
 3) Escreva uma função para permitir a inclusão de novos registros na tabela de Clientes.
 
 3.1) O programa deverá garantir que o código do cliente a ser inserido não existe na tabela de clientes.
