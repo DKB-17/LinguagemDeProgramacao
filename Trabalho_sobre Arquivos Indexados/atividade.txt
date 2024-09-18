@@ -32,7 +32,6 @@ Vendas: código_venda, código_cliente, código_pacote, quantidade_pessoas, valo
 3.2) Quando o usuário digitar o código da cidade, o programa deverá buscar este código na tabela de Cidades e exibir o nome da cidade e UF e o nome do País.
 
 
-
 4) Escreva uma função para permitir a exclusão de registros na tabela de Clientes.
 
 4.1) O programa não deverá permitir a exclusão de clientes que possuam vendas cadastradas em seu nome.
