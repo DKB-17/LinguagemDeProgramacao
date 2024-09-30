@@ -156,18 +156,23 @@ struct guias {
     string endereco;
     string telefone;
     cidades *codigo_cidade;
+    int status = 1;
 };
 
 void imprimirGuia(const struct guias &guia)  {
-    cout << guia.codigo << " -\t" << guia.nome << " -\t" << guia.endereco << " -\t" << guia.telefone << " -\t";
-    imprimirCidade(*guia.codigo_cidade);
+    if(guia.status != 0) {
+        cout << guia.codigo << " -\t" << guia.nome << " -\t" << guia.endereco << " -\t" << guia.telefone << " -\t";
+        imprimirCidade(*guia.codigo_cidade);
+    }
 }
 
 void imprimirListaGuia(const struct guias listaGuias[], int contador_guias) {
     cout << "\nLista de Guias: " << endl;
     for (int i = 0; i < contador_guias; i++) {
-        imprimirGuia(listaGuias[i]);
-        cout << endl;
+        if(listaGuias[i].status != 0) {
+            imprimirGuia(listaGuias[i]);
+            cout << endl;
+        }
     }
 }
 
@@ -175,7 +180,7 @@ guias* buscarGuia (int codigo_entrada, struct guias lista_guais[], int contador_
     if(contador_guias != 0) {
         int i;
         for(;lista_guais[i].codigo != codigo_entrada && i < contador_guias; i++);
-        if(i < contador_guias) {
+        if(i < contador_guias && lista_guais[i].status != 0) {
             return &lista_guais[i];
         }
     }
@@ -276,7 +281,6 @@ void adicionarIndiceCliente(struct indice_clientes listaIndiceCliente[], int con
         listaIndiceCliente[contador].codigo = cliente.codigo;
         listaIndiceCliente[contador].cliente = &cliente;
     }
-
 }
 
 void lerCliente(struct clientes lista_clientes[], int &contador_clientes, struct cidades lista_cidades[], int
@@ -321,17 +325,15 @@ contador_cidades, struct indice_clientes lista_indice_clientes[]) {
     contador_clientes += 1;
 }
 
-
-void reorganizarLista(struct indice_clientes listaIndeces[], struct clientes listaClientes[], int &contador_clientes) {
+void reorganizarListaCliente(struct clientes listaClientes[], int
+&contador_clientes) {
     struct clientes novaLista[contador_clientes];
     int j= -1;
     for(int k= 0; k<contador_clientes; k++) {
-        struct clientes *i = listaIndeces[k].cliente;
+        struct clientes *i = &listaClientes[k];
         if(i->status == 1) {
             j++;
             novaLista[j] = *i;
-            listaIndeces[j].codigo = novaLista[j].codigo;
-            listaIndeces[j].cliente = &novaLista[j];
         }
     }
     contador_clientes = j+1;
@@ -340,7 +342,6 @@ void reorganizarLista(struct indice_clientes listaIndeces[], struct clientes lis
     }
 }
 
-
 struct pacotes {
     int codigo;
     string descricao;
@@ -348,6 +349,16 @@ struct pacotes {
     float valor_por_pessoa;
     int total_participantes;
     int quant_max_participantes;
+};
+
+struct indice_pacotes {
+    int codigo;
+    pacotes *end_pacote;
+};
+
+struct indice_pacote_guia {
+    guias *end_guia;
+    pacotes *end_pacote;
 };
 
 void imprimirPacote(const struct pacotes &pacote){
@@ -382,7 +393,47 @@ pacotes* buscarPacote(int codigo_entrada, struct pacotes listaPacotes[], int con
     return NULL;
 }
 
-void lerPacotes(struct pacotes listaPacotes[], int &contador_pacotes, struct guias listaGuias[], int contador_guias) {
+indice_pacote_guia* buscarGuiaPacote(int codigo_entrada, struct indice_pacote_guia listaGuiaPacotes[], int contador) {
+    if(contador != 0) {
+        int i = 0;
+        for(;listaGuiaPacotes[i].end_guia->codigo != codigo_entrada && i < contador;i++);
+        if(i < contador && listaGuiaPacotes[i].end_guia->status != 0) {
+            return &listaGuiaPacotes[i];
+        }
+    }
+    return NULL;
+}
+
+void adicionarIndicePacote(struct indice_pacotes listaIndicePacote[], int contador, struct pacotes pacote) {
+    if(contador != 0) {
+        int i;
+        for(i = contador; listaIndicePacote[i-1].codigo > pacote.codigo && i>0; i--) {
+            listaIndicePacote[i] = listaIndicePacote[i-1];
+        }
+        listaIndicePacote[i].codigo = pacote.codigo;
+        listaIndicePacote[i].end_pacote = &pacote;
+    }else {
+        listaIndicePacote[contador].codigo = pacote.codigo;
+        listaIndicePacote[contador].end_pacote = &pacote;
+    }
+}
+
+void adicionaPacoteGuia(struct indice_pacote_guia listaGuiasPacotes[], int contador, struct pacotes pacote) {
+    if(contador != 0) {
+        int i;
+        for(i = contador; listaGuiasPacotes[i-1].end_guia->codigo > pacote.codigo_guia->codigo && i>0; i--) {
+            listaGuiasPacotes[i] = listaGuiasPacotes[i-1];
+        }
+        listaGuiasPacotes[i].end_guia = pacote.codigo_guia;
+        listaGuiasPacotes[i].end_pacote = &pacote;
+    }else {
+        listaGuiasPacotes[contador].end_guia = pacote.codigo_guia;
+        listaGuiasPacotes[contador].end_pacote = &pacote;
+    }
+}
+
+void lerPacotes(struct pacotes listaPacotes[], int &contador_pacotes, struct guias listaGuias[], int contador_guias,
+struct indice_pacotes lista_indice_pacotes[], struct indice_pacote_guia lista_guia_pacotes[]) {
     struct pacotes pacote;
     struct pacotes *buscaPacote;
     int codigo_guia;
@@ -417,18 +468,27 @@ void lerPacotes(struct pacotes listaPacotes[], int &contador_pacotes, struct gui
         }
     } while (pacote.codigo_guia == NULL || confirmacao != 1);
     listaPacotes[contador_pacotes] = pacote;
+    adicionarIndicePacote(lista_indice_pacotes, contador_pacotes, pacote);
+    adicionaPacoteGuia(lista_guia_pacotes, contador_pacotes, pacote);
     contador_pacotes += 1;
 }
 
-struct indice_pacote {
-    int codigo_pacote;
-    int end_pacote;
-};
-
-struct indice_pacote_guia {
-    int codigo_guia;
-    int end_pacote;
-};
+void reorganizarListaGuias(struct guias listaGuias[], int
+&contador) {
+    struct guias novaLista[contador];
+    int j= -1;
+    for(int k= 0; k<contador; k++) {
+        struct guias *i = &listaGuias[k];
+        if(i->status == 1) {
+            j++;
+            novaLista[j] = *i;
+        }
+    }
+    contador = j+1;
+    for(int k=0;k<contador;k++) {;
+        listaGuias[k] = novaLista[k];
+    }
+}
 
 struct vendas {
     int codigo;
@@ -444,11 +504,14 @@ void imprimirVenda(const struct vendas venda) {
 }
 
 void imprimirListaVenda(struct vendas listaVenda[], int contador_vendas) {
+    float soma = 0;
     cout << "\nLista de Vendas: " << endl;
     for (int i = 0; i < contador_vendas; i++) {
+        soma += listaVenda[i].valor_total;
         imprimirVenda(listaVenda[i]);
         cout << endl;
     }
+    cout << "Valor total vendido: " << soma;
 }
 
 vendas* buscarVenda(int codigo_entrada, struct vendas listaVenda[], int contador_vendas) {
@@ -569,7 +632,7 @@ contador_clientes, struct pacotes listaPacotes[], int contador_pacotes, struct i
     }
 }
 
-void removerCliente(struct clientes lista_clientes[], const int contador_cliente, struct
+void removerCliente(struct clientes lista_clientes[], int &contador_cliente, struct
 indice_vendas_cliente listaVendasCliente[], int contador_vendas_clientes) {
     system("cls");
     imprimirListaCliente(lista_clientes, contador_cliente);
@@ -577,10 +640,10 @@ indice_vendas_cliente listaVendasCliente[], int contador_vendas_clientes) {
     cout << "\nDigite o codigo de cliente que deseja remover: ";
     cin >> codigo_entrada;
     struct clientes *cliente = buscarCliente(codigo_entrada, lista_clientes, contador_cliente);
-    struct indice_vendas_cliente *venda_cliente = buscarVendaCliente(cliente->codigo,listaVendasCliente, contador_vendas_clientes);
-    if(venda_cliente == NULL) {
-        int confirmacao;
-        if(cliente != NULL) {
+    if(cliente != NULL) {
+        struct indice_vendas_cliente *venda_cliente = buscarVendaCliente(cliente->codigo,listaVendasCliente, contador_vendas_clientes);
+        if(venda_cliente == NULL) {
+            int confirmacao;
             imprimirCliente(*cliente);
             cout << "\n1)Confirmar\t2)Cancelar: ";
             cin >> confirmacao;
@@ -588,13 +651,38 @@ indice_vendas_cliente listaVendasCliente[], int contador_vendas_clientes) {
                 cliente->status = 0;
             }
         }else {
-            erroCodigoNaoExiste();
+            cout << "\nEste cliente possui venda registrada, nao sera possivel remove-lo :(";
         }
     }else {
-        cout << "\nEste cliente possui venda registrada, nao sera possivel remove-lo :(";
+        erroCodigoNaoExiste();
     }
 }
 
+void removerGuia(struct guias lista_guias[], int &contador_guias, struct
+indice_pacote_guia listaGuiasPacotes[]) {
+    system("cls");
+    imprimirListaGuia(lista_guias, contador_guias);
+    int codigo_entrada;
+    cout << "\nDigite o codigo do guia que deseja remover: ";
+    cin >> codigo_entrada;
+    struct guias *guia = buscarGuia(codigo_entrada, lista_guias, contador_guias);
+    if(guia != NULL) {
+        struct indice_pacote_guia *pacote_guia = buscarGuiaPacote(guia->codigo, listaGuiasPacotes, contador_guias);
+        if(pacote_guia == NULL) {
+            int confirmacao;
+            imprimirGuia(*guia);
+            cout << "\n1)Confirmar\t2)Cancelar: ";
+            cin >> confirmacao;
+            if(confirmacao == 1) {
+                guia->status = 0;
+            }
+        }else {
+            cout << "\nEste guia possui pacote registrado, nao sera possivel remove-lo :(";
+        }
+    }else {
+        erroCodigoNaoExiste();
+    }
+}
 
 int main() {
 
@@ -641,10 +729,20 @@ int main() {
     int tamanho_pacotes = 10;
     int contador_pacotes = 3;
     struct pacotes lista_pacotes[tamanho_pacotes];
+    struct indice_pacotes lista_indice_pacotes[tamanho_pacotes];
+    struct indice_pacote_guia lista_guias_pacotes[tamanho_pacotes];
 
     lista_pacotes[0] = {3, "Viagem Roma", &lista_guias[0], 150.00 , 12, 50 };
     lista_pacotes[1] = {5, "Passeio em Candido Mota", &lista_guias[2], 10.00, 40, 60};
     lista_pacotes[2] = {6, "Viagem Marte", &lista_guias[1], 2000.00, 2, 10};
+
+    lista_indice_pacotes [0] = {lista_pacotes[0].codigo,&lista_pacotes[0]};
+    lista_indice_pacotes [1] = {lista_pacotes[1].codigo,&lista_pacotes[1]};
+    lista_indice_pacotes [2] = {lista_pacotes[2].codigo,&lista_pacotes[2]};
+
+    lista_guias_pacotes[0] = {lista_pacotes[0].codigo_guia, &lista_pacotes[0]};
+    lista_guias_pacotes[1] = {lista_pacotes[2].codigo_guia, &lista_pacotes[2]};
+    lista_guias_pacotes[2] = {lista_pacotes[1].codigo_guia, &lista_pacotes[1]};
 
     int tamanho_vendas = 10;
     int contador_vendas = 3;
@@ -682,7 +780,8 @@ int main() {
                     }else if(op == 4) {
                         lerCliente(lista_clientes, contador_clientes, lista_cidades, contador_cidades, lista_indice_clientes);
                     }else if(op == 5) {
-                        lerPacotes(lista_pacotes, contador_pacotes,lista_guias, contador_guias);
+                        lerPacotes(lista_pacotes, contador_pacotes,lista_guias, contador_guias, lista_indice_pacotes,
+                         lista_guias_pacotes);
                     }else if(op == 6) {
                         lerVenda(lista_vendas, contador_vendas, lista_clientes, contador_clientes, lista_pacotes,
                         contador_pacotes, lista_vendas_clientes);
@@ -699,9 +798,11 @@ int main() {
                     }else if(op == 2) {
 
                     }else if(op == 3) {
-
+                        removerGuia(lista_guias,contador_guias,lista_guias_pacotes);
+                        reorganizarListaGuias(lista_guias,contador_guias);
                     }else if(op == 4) {
                         removerCliente(lista_clientes,contador_clientes,lista_vendas_clientes,contador_vendas);
+                        reorganizarListaCliente(lista_clientes, contador_guias);
                     }else if(op == 5) {
 
                     }else if(op == 6) {
@@ -711,7 +812,8 @@ int main() {
                 }else if(op == 3) {
                     system("cls");
                     cout << "\nOque deseja fazer: ";
-                    cout << "\n1)Mostrar pais\t2)Mostrar Cidade\t3)Mostrar Guia\t4)Mostrar Cliente\t5)Mostrar Pacote\t6)Mostrar Verda" << endl;
+                    cout << "\n1)Mostrar pais\t2)Mostrar Cidade\t3)Mostrar Guia\t4)Mostrar Cliente\t5)Mostrar";
+                    cout << " Pacote\t6)Mostrar Verda\t7)Mostrar Pacotes cheios" << endl;
                     cin >> op;
                     if(op == 1) {
                         imprimirListaPais(lista_paises, contador_paises);
@@ -725,6 +827,8 @@ int main() {
                         imprimirListaPacotes(lista_pacotes, contador_pacotes);
                     }else if(op == 6) {
                         imprimirListaVenda(lista_vendas, contador_vendas);
+                    }else if(op == 7) {
+                        imprimirListaPacotes(lista_pacotes,contador_pacotes,true);
                     }else {
                         erroOpcaoInvalida();
                     }
