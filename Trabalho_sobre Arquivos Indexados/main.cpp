@@ -733,7 +733,7 @@ int main() {
     struct indice_pacote_guia lista_guias_pacotes[tamanho_pacotes];
 
     lista_pacotes[0] = {3, "Viagem Roma", &lista_guias[0], 150.00 , 12, 50 };
-    lista_pacotes[1] = {5, "Passeio em Candido Mota", &lista_guias[2], 10.00, 40, 60};
+    lista_pacotes[1] = {5, "Passeio em Candido Mota", &lista_guias[2], 10.00, 60, 60};
     lista_pacotes[2] = {6, "Viagem Marte", &lista_guias[1], 2000.00, 2, 10};
 
     lista_indice_pacotes [0] = {lista_pacotes[0].codigo,&lista_pacotes[0]};

@@ -69,7 +69,6 @@ Vendas: código_venda, código_cliente, código_pacote, quantidade_pessoas, valo
 8.1) Para cada pacote consultado, exibir: todos os seus dados e o valor total arrecadado pelo pacote (valor_por_pessoa * total_participantes).
 
 
-
 9) Escreva uma função para exibir todos os registros da tabela Pacotes que tenham sido completamente vendidos (total_participantes = quant_max_participantes).
 
 9.1) As seguintes informações devem ser exibidas: código, descrição, nome do guia, valor total arrecadado pelo pacote (valor_por_pessoa * total_participantes).
