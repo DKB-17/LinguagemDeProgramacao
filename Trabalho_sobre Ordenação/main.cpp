@@ -1,12 +1,15 @@
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <vector>
 #include <cstdlib>
 #include <conio.h>
 #include <ctime>
+#include <iomanip>
 #include <string>
 #include <sstream>
 #include <map>
+#include <set>
 
 using namespace  std;
 
@@ -16,6 +19,7 @@ struct produto {
     int qtd_venda;
     string dia_venda;
 };
+
 
 void menu() {
     cout <<     "\nSISTEMA DE VENDAS\n"
@@ -80,27 +84,23 @@ void lerElementos(vector<produto> &lst, int qtdElementos) {
     }
 }
 
-void carregarRegistros(int nElementos, vector<produto> &lst) {
+void carregarRegistros(long nElementos, vector<produto> &lst) {
     
     lst.clear();
-    ifstream arquivo("listaDesorganizada.txt");
-    if(!arquivo.is_open()){
-        ofstream arquivo("listaDesorganizada.txt");
-        if (arquivo.is_open()) {
-            for(int i=lst.size(); i<nElementos; i++) {
+    ofstream arquivo("listaDesorganizada.txt");
+    if(arquivo.is_open()){
+        for(int i=0; i < nElementos; i++) {
                 produto p;
                 p.nome = gerarNomeProduto();
                 p.preco = (rand() % 20 + 10);
                 p.qtd_venda = rand() % 100 + 1;
                 p.dia_venda = gerarDataVenda();
                 arquivo << p.nome << ";" << p.preco << ";" << p.qtd_venda << ";" << p.dia_venda << "\n";
-            }
-        }else{
-            cout << "Arquivo nao abriu" << endl;
         }
+        arquivo.close();
+    }else{
+        cout << "Arquivo nao abriu" << endl;
     }
-    arquivo.close();
-
     lerElementos(lst, nElementos);
 }
 
@@ -116,72 +116,36 @@ void imprimirLista(const vector<produto> &lst) {
 
 void guardarDadosOrdenacao(double duracao, long qtdElementos, int tipoOrdenador){
     string line;
-    ofstream arquivo("dadosTempoOrdenadores.txt");
-    ifstream arquivo2("dadosTempoOrdenadores.txt");
-    if(!arquivo2.is_open()){
-        ofstream arquivo("dadosTempoOrdenadores.txt");
-        if(arquivo.is_open()) {
-            arquivo << "Tempo: " << duracao << "seg" << "\tcom " << qtdElementos << " elementos";
-            if(tipoOrdenador == 0){
-                arquivo << " - Bubble";
-            }
-            if(tipoOrdenador == 1){
-                arquivo << " - Insercao";
-            }
-            if(tipoOrdenador == 0){
-                arquivo << " - Selecao";
-            }
-            if(tipoOrdenador == 0){
-                arquivo << " - Contagem";
-            }
-            if(tipoOrdenador == 0){
-                arquivo << " - Shell";
-            }
-            if(tipoOrdenador == 0){
-                arquivo << " - Quick";
-            }
-            arquivo << "\n";
-            
-        }else{
-            cout << "Arquivo nao abriu";
+    fstream arquivo;
+    arquivo.open("dadosTempoOrdenadores.txt", ios::out|ios::app);
+    if(arquivo.is_open()) {
+        arquivo << "Tempo: " << setprecision(4) << duracao << "seg" << "\tcom " << qtdElementos << " elementos";
+        if(tipoOrdenador == 0){
+            arquivo << " - Bubble";
+        }else if(tipoOrdenador == 1){
+            arquivo << " - Insercao";
+        }else if(tipoOrdenador == 2){
+            arquivo << " - Selecao";
+        }else if(tipoOrdenador == 3){
+            arquivo << " - Contagem";
+        }else if(tipoOrdenador == 4){
+            arquivo << " - Shell";
+        }else if(tipoOrdenador == 5){
+            arquivo << " - Quick";
         }
-    }else{
-        while(getline(arquivo2, line)) {
-            arquivo << line;
-        };
-        arquivo << "Tempo: " << duracao << "seg" << "\tcom " << qtdElementos << " elementos";
-            if(tipoOrdenador == 0){
-                arquivo << " - Bubble";
-            }
-            if(tipoOrdenador == 1){
-                arquivo << " - Insercao";
-            }
-            if(tipoOrdenador == 0){
-                arquivo << " - Selecao";
-            }
-            if(tipoOrdenador == 0){
-                arquivo << " - Contagem";
-            }
-            if(tipoOrdenador == 0){
-                arquivo << " - Shell";
-            }
-            if(tipoOrdenador == 0){
-                arquivo << " - Quick";
-            }
-            arquivo << "\n";
-            
-    }
-    arquivo.close();
-    arquivo2.close();
+        arquivo << "\n";
+        arquivo.close();
+        }
 }
 
-bool testarOrdenação(vector<produto> lst){
-    for(int i=1;i<lst.size();i++){
-        if(lst[i-1].preco > lst[i].preco){
-            return false;
+bool testarOrdenacao(vector<produto> &lst){
+    bool correto = true;
+    for(int i= 0; i<lst.size(); i--){
+        if(lst[i].preco < lst[i+1].preco){
+            correto = false;
         }
     }
-    return true;
+    return correto;
 }
 
 void bubbleSort(vector<produto> &lst) {
@@ -189,13 +153,15 @@ void bubbleSort(vector<produto> &lst) {
     clock_t start, end;
     start = clock();
 
-    int i, tam = 1, troca = 1;
+    int i, tam = 1;
+    bool troca = true;
+    produto aux;
     while(troca) {
-        troca = 0;
+        troca = false;
         for(i = 0; i<lst.size() - tam; i++) {
             if(lst[i].preco < lst[i+1].preco) {
-                troca = 1;
-                produto aux = lst[i];
+                troca = true;
+                aux = lst[i];
                 lst[i] = lst[i+1];
                 lst[i+1] = aux;
             }
@@ -206,7 +172,7 @@ void bubbleSort(vector<produto> &lst) {
     end = clock();
     double duracao = (double)(end-start) / CLOCKS_PER_SEC;
 
-    if(testarOrdenação(lst)){
+    if(testarOrdenacao(lst)){
         guardarDadosOrdenacao(duracao, lst.size(), 0);
 
         ofstream arquivo("listaOrgBubble.txt");
@@ -217,7 +183,7 @@ void bubbleSort(vector<produto> &lst) {
             arquivo.close();
         }
     }else{
-        cout << "Não esta ordenado";
+        cout << "Nao esta ordenado";
     }
 }
 
@@ -226,20 +192,24 @@ void insertSort(vector<produto> &lst){
     clock_t start, end;
     start = clock();
 
+    produto aux;
+    int j;
+
     for(int i = 1; i<lst.size(); i++){
-        produto aux = lst[i];
-        int j = (i-1);
-        for(; j>=0 && lst[j].preco > lst[i].preco; j--){
-            lst[j+1] = lst[j];
+        j=0;
+        while(lst[i-j].preco > lst[i-(j+1)].preco && j < i) {
+            aux = lst[i-j];
+            lst[i-j] = lst[i-(j+1)];
+            lst[i-(j+1)] = aux;
+            j++;
         }
-        lst[j+1] = aux;
     }
 
     end = clock();
     double duracao = (double)(end-start) / CLOCKS_PER_SEC;
 
 
-    if(testarOrdenação(lst)){
+    if(testarOrdenacao(lst)){
             guardarDadosOrdenacao(duracao, lst.size(), 1);
 
             ofstream arquivo("listaOrgInsert.txt");
@@ -250,32 +220,34 @@ void insertSort(vector<produto> &lst){
                 arquivo.close();
             }
         }else{
-            cout << "Não esta ordenado";
+            cout << "Nao esta ordenado";
         }
 }
 
-void selectSort(vector<produto> lst) {
+void selectSort(vector<produto> &lst) {
 
     clock_t start, end;
     start = clock();
 
+    produto aux;
+
     for(int i=0; i<lst.size()-1; i++) {
-        int minIndex = i;
-        for(int j =i+1;j<lst.size(); j++) {
-            if(lst[minIndex].preco > lst[j].preco) {
-                minIndex = j;
+        int maxIndex = i;
+        for(int j = i+1 ; j<lst.size(); j++) {
+            if(lst[maxIndex].preco < lst[j].preco) {
+                maxIndex = j;
             }
         }
-        produto aux = lst[i];
-        lst[i] = lst[minIndex];
-        lst[minIndex] = aux;
+        aux = lst[i];
+        lst[i] = lst[maxIndex];
+        lst[maxIndex] = aux;
     }
 
     end = clock();
     double duracao = (double)(end-start) / CLOCKS_PER_SEC;
 
-    if(testarOrdenação(lst)){
-        guardarDadosOrdenacao(duracao, lst.size(), 3);
+    if(testarOrdenacao(lst)){
+        guardarDadosOrdenacao(duracao, lst.size(), 2);
         ofstream arquivo("listaOrgSelect.txt");
         if(arquivo.is_open()) {
             for(auto p : lst) {
@@ -284,7 +256,7 @@ void selectSort(vector<produto> lst) {
             arquivo.close();
         }
     }else{
-        cout << "Não esta ordenado";
+        cout << "Nao esta ordenado";
     }
 }
 
@@ -293,21 +265,24 @@ void countSort(vector<produto> &lst) {
     clock_t start, end;
     start = clock();
 
-    map<int ,vector<produto>> matriz;
-    for(int i=0; i< lst.size(); i++){
-        matriz[lst[i].preco].push_back(lst[i]);
+    map<int, vector<produto>> matriz;
+    set<int> precos;
+
+    for(int i=0; i < lst.size(); i++){
+        matriz[-(lst[i].preco)].push_back(lst[i]);
     }
-    for(int i=0;i<matriz.size();i++) {
-        for(int j=0;j<matriz[i].size();j++) {
-            lst.push_back(matriz[i][j]);
+    lst.clear();
+    for(auto &pair:matriz) {
+        for(auto &produto : pair.second) {
+            lst.push_back(produto);
         }
     }
 
     end = clock();
     double duracao = ((double)(end-start) / CLOCKS_PER_SEC);
 
-    if(testarOrdenação(lst)){
-        guardarDadosOrdenacao(duracao, lst.size(), 4);
+    if(testarOrdenacao(lst)){
+        guardarDadosOrdenacao(duracao, lst.size(), 3);
         ofstream arquivo("listaOrgCount.txt");
         if(arquivo.is_open()) {
             for(auto p : lst) {
@@ -316,7 +291,7 @@ void countSort(vector<produto> &lst) {
             arquivo.close();
         }
     }else{
-        cout << "Não esta ordenado";
+        cout << "Nao esta ordenado";
     }
 
 }
@@ -327,27 +302,23 @@ void shellSort(vector<produto> &lst) {
     start = clock();
 
     produto aux;
-    int troca = 0;
-    for(int i=lst.size(); i>0;i=i/2) {
-        troca = 0;
-        for(int j = 0; j+i < lst.size();j++) {
-            if(lst[j].preco > lst[j+i].preco) {
-                aux = lst[j];
-                lst[j] = lst[j+i];
-                lst[j+i] = aux;
-                troca = 1;
+
+    for(int i= lst.size()/2; i>0; i/=2) {
+        for(int j = i; j < lst.size(); j+=1) {
+            aux = lst[j];
+            int k;
+            for(k = j; k >= i && lst[k - i].preco < aux.preco; k -= i) {
+                lst[k] = lst[k - i];
             }
-        }
-        if(!troca) {
-            i=0;
+            lst[k] = aux;
         }
     }
 
     end = clock();
     double duracao = ((double)(end-start) / CLOCKS_PER_SEC);
 
-    if(testarOrdenação(lst)){
-        guardarDadosOrdenacao(duracao, lst.size(), 5);
+    if(testarOrdenacao(lst)){
+        guardarDadosOrdenacao(duracao, lst.size(), 4);
         ofstream arquivo("listaOrgShell.txt");
         if(arquivo.is_open()) {
             for(auto p : lst) {
@@ -356,42 +327,49 @@ void shellSort(vector<produto> &lst) {
             arquivo.close();
         }
     }else{
-        cout << "Não esta ordenado";
+        cout << "Nao esta ordenado";
     }
 }
+int partilar(vector<produto> &lst, int inicio, int fim) {
+    int i = inicio-1;
+    for(int n=inicio; n <= fim-1; n+=1) {
+        if(lst[n].preco <= lst[fim].preco)
+        {
+            i+=1;
+            produto temp = lst[i];
+            lst[i] = lst[n];
+            lst[n] = temp;
+        }
+    }
+    produto temp = lst[i+1];
+    lst[i+1] = lst[fim];
+    lst[fim] = temp;
+
+    return (i+1);
+}
+
 
 void quickSort(vector<produto> &lst, int inicio, int fim) {
     if(inicio < fim) {
-        produto aux;
-        int i = inicio;
-        for(int n=inicio; n < fim; n++) {
-            if(lst[n].preco <= lst[fim].preco) {
-                aux = lst[n];
-                lst[n] = lst[i];
-                lst[i] = aux;
-                i++;
-            }
-        }
-        aux = lst[fim];
-        lst[fim] = lst[i];
-        lst[i] = aux;
+        int i = partilar(lst, inicio, fim);
         quickSort(lst, inicio, i-1);
         quickSort(lst, i+1, fim);
     }
 }
 
-void chamarQuickSort(vector<produto> &lst, int inicio, int fim) {
+void chamarQuickSort(vector<produto> &lst) {
 
     clock_t start, end;
     start = clock();
 
-    quickSort(lst, inicio, fim);
+    quickSort(lst, 0, lst.size());
+    reverse(lst.begin(), lst.end());
 
     end = clock();
     double duracao = ((double)(end-start) / CLOCKS_PER_SEC);
 
-    if(testarOrdenação(lst)){
-        guardarDadosOrdenacao(duracao, lst.size(), 6);
+    if(testarOrdenacao(lst)){
+        guardarDadosOrdenacao(duracao, lst.size(), 5);
         ofstream arquivo("listaOrgQuick.txt");
         if(arquivo.is_open()) {
             for(auto p : lst) {
@@ -400,12 +378,48 @@ void chamarQuickSort(vector<produto> &lst, int inicio, int fim) {
             arquivo.close();
         }
     }else{
-        cout << "Não esta ordenado";
+        cout << "Nao esta ordenado";
     }
 }
 
 void testarTodos(vector<produto> &lst) {
-
+    carregarRegistros(1000, lst);
+    bubbleSort(lst);
+    carregarRegistros(1000, lst);
+    insertSort(lst);
+    carregarRegistros(1000, lst);
+    selectSort(lst);
+    carregarRegistros(1000, lst);
+    countSort(lst);
+    carregarRegistros(1000, lst);
+    shellSort(lst);
+    carregarRegistros(1000, lst);
+    chamarQuickSort(lst);
+    carregarRegistros(100000, lst);
+    bubbleSort(lst);
+    carregarRegistros(100000, lst);
+    insertSort(lst);
+    carregarRegistros(100000, lst);
+    selectSort(lst);
+    carregarRegistros(100000, lst);
+    countSort(lst);
+    carregarRegistros(100000, lst);
+    shellSort(lst);
+    carregarRegistros(100000, lst);
+    chamarQuickSort(lst);
+    carregarRegistros(1000000, lst);
+    bubbleSort(lst);
+    carregarRegistros(1000000, lst);
+    insertSort(lst);
+    carregarRegistros(1000000, lst);
+    selectSort(lst);
+    carregarRegistros(1000000, lst);
+    countSort(lst);
+    carregarRegistros(1000000, lst);
+    shellSort(lst);
+    carregarRegistros(1000000, lst);
+    chamarQuickSort(lst);
+    cout << "fim";
 }
 
 int main()
@@ -438,7 +452,7 @@ int main()
         }else if(op == 9) {
                 shellSort(lstProduto);
         }else if(op == 10) {
-                chamarQuickSort(lstProduto, 0, (int)lstProduto.size());
+                chamarQuickSort(lstProduto);
         }else if(op == 11) {
                 testarTodos(lstProduto);
         }else {
