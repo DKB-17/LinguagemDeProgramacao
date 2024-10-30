@@ -6,8 +6,8 @@ struct  no;
 
 struct no {
     int info;
-    no* direito = NULL;
-    no* esquerda = NULL;
+    no* direita;
+    no* esquerda;
 };
 
 void inserir_no(no* raiz, int valor) {
@@ -52,6 +52,7 @@ void menu() {
     cout << "\n1 - Inserir";
     cout << "\n2 - Buscar";
     cout << "\n3 - Imprimir";
+    cout << "\n4 - Remover";
     cout << endl;
 }
 
