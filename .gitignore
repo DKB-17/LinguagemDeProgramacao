@@ -31,3 +31,7 @@
 *.out
 *.app
 *.xml
+*.iml
+*.txt
+/Trabalho_sobre Arquivos Indexados/cmake-build-debug
+/Trabalho_sobre Arquivos Indexados/.idea
