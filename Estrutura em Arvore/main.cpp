@@ -87,18 +87,7 @@ no* rotacaoEsquerdaDireita(no* r) {
 
 no* novoNo(int valor) {
 
-    no* novo = (no*) malloc(sizeof(no));
-
-    if(novo) {
-        novo->info = valor;
-        novo->direita = nullptr;
-        novo->esquerda = nullptr;
-        novo->altura = 0;
-    }
-    else {
-        cout << "Errom ao alocar nó em novoNo\n";
-    }
-    return novo;
+    return new no{valor, nullptr, nullptr, 0};
 }
 
 arvoreBi* inserir_no(arvoreBi *raiz, int valor) {
